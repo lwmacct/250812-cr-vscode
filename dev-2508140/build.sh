@@ -165,6 +165,8 @@ RUN set -eux; \
         vitest@latest \
         vue-tsc@latest \
         yarn@latest \
+        typescript@latest \
+        pm2@latest \
         pnpm@latest-10 \
         prettier@latest \
         npm-check-updates \
