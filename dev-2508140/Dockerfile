@@ -153,6 +153,7 @@ RUN set -eux; \
         yarn@latest \
         pnpm@latest-10 \
         prettier@latest \
+        npm-check-updates \
         @anthropic-ai/claude-code; \
     echo "Cleaning npm cache and temporary files"; \
     npm cache clean --force; \
