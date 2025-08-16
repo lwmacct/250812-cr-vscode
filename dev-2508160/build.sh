@@ -240,7 +240,7 @@ __help() {
   cat >/dev/null <<"EOF"
 这里可以写一些备注
 
-ghcr.io/lwmacct/250209-cr-vscode:dev-2508140
+ghcr.io/lwmacct/250209-cr-vscode:dev-2508160
 
 EOF
 }
