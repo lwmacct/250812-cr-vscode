@@ -137,7 +137,7 @@ RUN set -eux; \
 
 RUN set -eux; \
     echo "安装 uv"; \
-    wget -qO- https://github.com/astral-sh/uv/releases/download/0.8.9/uv-aarch64-unknown-linux-gnu.tar.gz | tar -xzf - -C /tmp; \
+    wget -qO- https://github.com/astral-sh/uv/releases/download/0.8.11/uv-aarch64-unknown-linux-gnu.tar.gz | tar -xzf - -C /tmp; \
     mv /tmp/uv-aarch64-unknown-linux-gnu/uv /usr/local/bin/uv; \
     mv /tmp/uv-aarch64-unknown-linux-gnu/uvx /usr/local/bin/uvx; \
     chmod +x /usr/local/bin/uv /usr/local/bin/uvx; \
@@ -161,15 +161,16 @@ RUN set -eux; \
     npm config set prefer-offline false; \
     echo "Installing global npm packages"; \
     npm install -g --no-cache \
-        @go-task/cli \
-        vitest@latest \
-        vue-tsc@latest \
-        yarn@latest \
-        typescript@latest \
-        pm2@latest \
-        pnpm@latest-10 \
-        prettier@latest \
+        vitest \
+        degit \
+        vue-tsc \
+        yarn \
+        pm2 \
+        prettier \
+        typescript \
         npm-check-updates \
+        pnpm@latest-10 \
+        @go-task/cli \
         @anthropic-ai/claude-code; \
     echo "Cleaning npm cache and temporary files"; \
     npm cache clean --force; \
