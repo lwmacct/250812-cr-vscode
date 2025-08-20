@@ -104,6 +104,7 @@ RUN set -eux; \
         dnsutils \
         asciinema \
         umoci skopeo \
+        ffmpeg \
         ; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
