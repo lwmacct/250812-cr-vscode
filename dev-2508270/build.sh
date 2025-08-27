@@ -12,7 +12,7 @@ __main() {
 
   _dockerfile=$(
     cat <<"EOF"
-FROM arm64v8/ubuntu:noble-20250714
+FROM arm64v8/ubuntu:noble-20250716
 LABEL maintainer="https://github.com/lwmacct"
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -102,7 +102,7 @@ RUN set -eux; \
 
 RUN set -eux; \
     echo "安装 Golang https://golang.google.cn/dl/"; \
-    _go_version=$(curl -s https://golang.google.cn/dl/ | grep -E 'go[0-9]+\.[0-9]+\.[0-9]+' | grep 'linux-arm64' | head -1 | grep -o 'go[0-9]\+\.[0-9]\+\.[0-9]\+'); \
+    _go_version=$(curl -sSL 'go.dev/dl/?mode=json' | jq -r '.[0].version'); \
     echo "获取到 Golang 最新版本: $_go_version"; \
     curl -Lo - "https://golang.google.cn/dl/$_go_version.linux-arm64.tar.gz" | tar zxf - -C /usr/local/; \
     /usr/local/go/bin/go install mvdan.cc/sh/v3/cmd/shfmt@latest;
@@ -170,11 +170,11 @@ RUN set -eux; \
         degit \
         vue-tsc \
         yarn \
+        pnpm \
         pm2 \
         prettier \
         typescript \
         npm-check-updates \
-        pnpm@latest-10 \
         @go-task/cli \
         @anthropic-ai/claude-code; \
     echo "Cleaning npm cache and temporary files"; \
