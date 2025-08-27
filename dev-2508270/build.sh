@@ -102,7 +102,9 @@ RUN set -eux; \
 
 RUN set -eux; \
     echo "安装 Golang https://golang.google.cn/dl/"; \
-    curl -Lo - "https://golang.google.cn/dl/go1.25.0.linux-arm64.tar.gz" | tar zxf - -C /usr/local/; \
+    _go_version=$(curl -s https://golang.google.cn/dl/ | grep -E 'go[0-9]+\.[0-9]+\.[0-9]+' | grep 'linux-arm64' | head -1 | grep -o 'go[0-9]\+\.[0-9]\+\.[0-9]\+'); \
+    echo "获取到 Golang 最新版本: $_go_version"; \
+    curl -Lo - "https://golang.google.cn/dl/$_go_version.linux-arm64.tar.gz" | tar zxf - -C /usr/local/; \
     /usr/local/go/bin/go install mvdan.cc/sh/v3/cmd/shfmt@latest;
 
 RUN set -eux; \
