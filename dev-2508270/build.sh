@@ -231,9 +231,13 @@ EOF
     fi
   }
   {
-    _registry="ghcr.io/lwmacct" # CR 服务平台
+    _registry="ghcr.io/lwmacct" # 托管平台, 如果是 docker.io 则可以只填写用户名
     _repository="$_registry/$_image"
-    docker buildx build --builder default --platform linux/arm64 -t "$_repository" --network host --progress plain --load . && {
+    _buildcache="$_registry/$_pro_name:cache"
+    echo "image: $_repository"
+    echo "cache: $_buildcache"
+    echo "-----------------------------------"
+    docker buildx build --builder default --platform linux/arm64 -t "$_repository" --network host --progress plain --load --cache-to "type=registry,ref=$_buildcache,mode=max" --cache-from "type=registry,ref=$_buildcache" . && {
       if false; then
         docker rm -f sss
         docker run -itd --name=sss \
