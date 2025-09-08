@@ -195,6 +195,9 @@ RUN set -eux; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
 
+# https://github.com/etcd-io/etcd
+COPY --from=gcr.io/etcd-development/etcd:v3.6.4-arm64 /usr/local/bin/etcdctl /usr/local/bin/etcdctl
+
 RUN echo "软链接 cron.d" ; \
     rm -rf /etc/cron.d/; \
     ln -sf /apps/data/cron.d/ /etc/cron.d; \
