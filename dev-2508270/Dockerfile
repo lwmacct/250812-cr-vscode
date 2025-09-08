@@ -1,4 +1,5 @@
-FROM arm64v8/ubuntu:noble-20250716
+# https://hub.docker.com/r/arm64v8/ubuntu/
+FROM arm64v8/ubuntu:noble-20250805
 LABEL maintainer="https://github.com/lwmacct"
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -86,13 +87,15 @@ RUN set -eux; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
 
+ARG GOPROXY=https://goproxy.cn,direct
+ARG GO111MODULE=on
 RUN set -eux; \
     echo "安装 Golang https://golang.google.cn/dl/"; \
     _go_version=$(curl -sSL 'go.dev/dl/?mode=json' | jq -r '.[0].version'); \
     echo "获取到 Golang 最新版本: $_go_version"; \
     curl -Lo - "https://golang.google.cn/dl/$_go_version.linux-arm64.tar.gz" | tar zxf - -C /usr/local/; \
-    /usr/local/go/bin/go install mvdan.cc/sh/v3/cmd/shfmt@latest; \
     echo "安装常用 Go 工具"; \
+    /usr/local/go/bin/go install mvdan.cc/sh/v3/cmd/shfmt@latest; \
     /usr/local/go/bin/go install golang.org/x/tools/cmd/godoc@latest; \
     /usr/local/go/bin/go install golang.org/x/tools/cmd/goimports@latest; \
     /usr/local/go/bin/go install google.golang.org/protobuf/cmd/protoc-gen-go@latest; \
