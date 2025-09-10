@@ -69,6 +69,9 @@ RUN set -eux; \
     find /opt/ohmyzsh/ -type d -name '.git'; \
     find /opt/ohmyzsh/ -type d -name '.git' | xargs -r rm -rf;
 
+# https://github.com/etcd-io/etcd
+COPY --from=gcr.io/etcd-development/etcd:v3.6.4-arm64 /usr/local/bin/etcdctl /usr/local/bin/etcdctl
+
 RUN set -eux; \
     echo 'https://github.com/cli/cli#installation'; \
     (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
@@ -125,7 +128,7 @@ RUN set -eux; \
         bpfcc-tools linux-tools-common \
         build-essential gcc make cmake automake ninja-build shc upx \
         openjdk-17-jdk \
-        file strace ltrace valgrind netcat-openbsd \
+        file strace ltrace valgrind netcat-openbsd uuid-runtime \
         git-lfs cron direnv shellcheck fzf zfsutils-linux xxd \
         zsh redis-tools openssh-client supervisor \
         xarclock xvfb x11vnc dbus-x11 \
@@ -194,9 +197,6 @@ RUN set -eux; \
     rm -rf ~/.npm /tmp/npm-cache; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
-
-# https://github.com/etcd-io/etcd
-COPY --from=gcr.io/etcd-development/etcd:v3.6.4-arm64 /usr/local/bin/etcdctl /usr/local/bin/etcdctl
 
 RUN echo "软链接 cron.d" ; \
     rm -rf /etc/cron.d/; \
