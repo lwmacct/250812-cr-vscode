@@ -131,7 +131,7 @@ RUN set -eux; \
         openjdk-17-jdk \
         file strace ltrace valgrind netcat-openbsd uuid-runtime \
         git-lfs cron direnv shellcheck fzf zfsutils-linux xxd \
-        zsh redis-tools openssh-client supervisor \
+        zsh redis-tools postgresql-client openssh-client supervisor \
         xarclock xvfb x11vnc dbus-x11 \
         dnsutils \
         asciinema \
