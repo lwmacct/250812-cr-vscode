@@ -5,8 +5,8 @@ __load_taskfile_env() {
   # 禁用 glob 的 no_nomatch 选项, 避免 find 匹配不到文件时依然有输出
   setopt no_nomatch
   {
-    # Load .env.template files
-    _task_env="$(find /apps/data/workspace/*/.taskfile/ -maxdepth 1 -type f -name '.env.template' 2>/dev/null)"
+    # Load .env.example files
+    _task_env="$(find /apps/data/workspace/*/.taskfile/ -maxdepth 1 -type f -name '.env.example' 2>/dev/null)"
     while IFS= read -r _env_file; do
       if [[ -f $_env_file ]]; then
         set -a
