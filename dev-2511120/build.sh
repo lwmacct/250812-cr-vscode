@@ -1,5 +1,19 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2317
+# document https://www.yuque.com/lwmacct/docker/buildx
+
+__main() {
+  {
+    _sh_path=$(realpath "$(ps -p $$ -o args= 2>/dev/null | awk '{print $2}')") # 当前脚本路径
+    _pro_name=$(echo "$_sh_path" | awk -F '/' '{print $(NF-2)}')               # 当前项目名
+    _dir_name=$(echo "$_sh_path" | awk -F '/' '{print $(NF-1)}')               # 当前目录名
+    _image="${_pro_name}:$_dir_name"
+  }
+
+  _dockerfile=$(
+    cat <<"EOF"
 # https://hub.docker.com/r/arm64v8/ubuntu/
-FROM arm64v8/ubuntu:noble-20250925
+FROM arm64v8/ubuntu:noble-20251001
 LABEL maintainer="https://github.com/lwmacct"
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-lc"]
@@ -58,7 +72,7 @@ RUN set -eux; \
 
 # https://github.com/etcd-io/etcd
 # curl -s https://api.github.com/repos/etcd-io/etcd/releases/latest | jq -r '.tag_name'
-COPY --from=gcr.io/etcd-development/etcd:v3.6.5-arm64 /usr/local/bin/etcdctl /usr/local/bin/etcdctl
+COPY --from=gcr.io/etcd-development/etcd:v3.6.6-arm64 /usr/local/bin/etcdctl /usr/local/bin/etcdctl
 
 RUN set -eux; \
     echo 'https://github.com/cli/cli#installation'; \
@@ -95,10 +109,10 @@ RUN set -eux; \
 ARG GOPROXY=https://goproxy.cn,direct
 ARG GO111MODULE=on
 RUN set -eux; \
-    echo "安装 Golang https://golang.google.cn/dl/"; \
-    _go_version=$(curl -sSL 'go.dev/dl/?mode=json' | jq -r '.[0].version'); \
+    echo "安装 Golang https://go.dev/dl/"; \
+    _go_version=$(curl -sSL 'https://go.dev/dl/?mode=json' | jq -r '.[0].version'); \
     echo "获取到 Golang 最新版本: $_go_version"; \
-    curl -Lo - "https://golang.google.cn/dl/$_go_version.linux-arm64.tar.gz" | tar zxf - -C /usr/local/; \
+    curl -Lo - "https://go.dev/dl/$_go_version.linux-arm64.tar.gz" | tar zxf - -C /usr/local/; \
     echo "安装常用 Go 工具"; \
     /usr/local/go/bin/go install mvdan.cc/sh/v3/cmd/shfmt@latest; \
     /usr/local/go/bin/go install golang.org/x/tools/cmd/godoc@latest; \
@@ -117,7 +131,7 @@ RUN set -eux; \
         openjdk-17-jdk \
         file strace ltrace valgrind netcat-openbsd uuid-runtime \
         git-lfs cron direnv shellcheck fzf zfsutils-linux xxd \
-        zsh redis-tools openssh-client supervisor \
+        zsh redis-tools postgresql-client openssh-client supervisor \
         xarclock xvfb x11vnc dbus-x11 \
         dnsutils \
         asciinema \
@@ -222,6 +236,56 @@ COPY apps/ /apps/
 ENTRYPOINT ["tini", "--"]
 CMD ["sh", "-c", "bash /apps/.entry.sh"]
 
-LABEL org.opencontainers.image.source=https://github.com/lwmacct/250812-cr-vscode
+LABEL org.opencontainers.image.source=$_ghcr_source
 LABEL org.opencontainers.image.description="专为 VSCode 容器开发环境构建"
 LABEL org.opencontainers.image.licenses=MIT
+EOF
+  )
+  {
+    cd "$(dirname "$_sh_path")" || exit 1
+    echo "$_dockerfile" >Dockerfile
+
+    _ghcr_source=$(sed 's|git@github.com:|https://github.com/|' ../.git/config | grep url | sed 's|.git$||' | awk '{print $NF}')
+    sed -i "s|\$_ghcr_source|$_ghcr_source|g" Dockerfile
+  }
+  {
+    if command -v sponge >/dev/null 2>&1; then
+      jq 'del(.credsStore)' ~/.docker/config.json | sponge ~/.docker/config.json
+    else
+      jq 'del(.credsStore)' ~/.docker/config.json >~/.docker/config.json.tmp && mv ~/.docker/config.json.tmp ~/.docker/config.json
+    fi
+  }
+  {
+    _registry="ghcr.io/lwmacct" # 托管平台, 如果是 docker.io 则可以只填写用户名
+    _repository="$_registry/$_image"
+    _buildcache="$_registry/$_pro_name:cache"
+    echo "image: $_repository"
+    echo "cache: $_buildcache"
+    echo "-----------------------------------"
+    # docker buildx build --builder default --platform linux/arm64 -t "$_repository" --network host --progress plain --load --cache-to "type=registry,ref=$_buildcache,mode=max" --cache-from "type=registry,ref=$_buildcache" . && {
+    docker buildx build --builder default --platform linux/arm64 -t "$_repository" --network host --progress plain --load . && {
+      if false; then
+        docker rm -f sss
+        docker run -itd --name=sss \
+          --restart=always \
+          --network=host \
+          --privileged=false \
+          "$_repository"
+        docker exec -it sss bash
+      fi
+    }
+    docker push "$_repository"
+
+  }
+}
+
+__main
+
+__help() {
+  cat >/dev/null <<"EOF"
+这里可以写一些备注
+
+ghcr.io/lwmacct/250209-cr-vscode:dev-2511120
+
+EOF
+}
