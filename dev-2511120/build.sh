@@ -155,9 +155,9 @@ RUN set -eux; \
 
 RUN set -eux; \
     echo "安装 uv"; \
-    _uv_version=$(curl -s https://api.github.com/repos/astral-sh/uv/releases/latest | jq -r '.tag_name'); \
-    echo "获取到 uv 最新版本: $_uv_version"; \
-    wget -qO- "https://github.com/astral-sh/uv/releases/download/$_uv_version/uv-aarch64-unknown-linux-gnu.tar.gz" | tar -xzf - -C /tmp; \
+    _tag_name=$(curl -s https://api.github.com/repos/astral-sh/uv/releases/latest | jq -r '.tag_name'); \
+    echo "获取到 uv 最新版本: $_tag_name"; \
+    wget -qO- "https://github.com/astral-sh/uv/releases/download/$_tag_name/uv-aarch64-unknown-linux-gnu.tar.gz" | tar -xzf - -C /tmp; \
     mv /tmp/uv-aarch64-unknown-linux-gnu/uv /usr/local/bin/uv; \
     mv /tmp/uv-aarch64-unknown-linux-gnu/uvx /usr/local/bin/uvx; \
     chmod +x /usr/local/bin/uv /usr/local/bin/uvx; \
@@ -170,11 +170,12 @@ RUN set -eux; \
 
 ENV NVM_DIR=/opt/nvm 
 ENV NODE_VERSION="lts/*"
-
 RUN set -eux; \
   echo "安装 nvm + Node LTS"; \
+  _tag_name=$(curl -s https://api.github.com/repos/nvm-sh/nvm/releases/latest | jq -r '.tag_name'); \
+  echo "获取到 nvm 最新版本: $_tag_name"; \
   mkdir -p "$NVM_DIR" \
-  && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | PROFILE=/dev/null bash \
+  && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$_tag_name/install.sh | PROFILE=/dev/null bash \
   && source "$NVM_DIR/nvm.sh" \
   && nvm install "$NODE_VERSION" \
   && nvm alias default "$NODE_VERSION" \
