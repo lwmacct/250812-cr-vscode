@@ -147,7 +147,6 @@ RUN set -eux; \
     apt-get install -y --no-install-recommends \
         python3 python3-pip python3-venv python3-dotenv \
         python3-yaml \
-        flake8 python3-flake8 python3-autopep8 \
         python3-requests python3-requests-unixsocket \
         python3-openssl python3-bcrypt; \
     apt-get autoremove -y; \
