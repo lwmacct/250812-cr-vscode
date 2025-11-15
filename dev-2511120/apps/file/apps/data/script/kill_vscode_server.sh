@@ -13,7 +13,7 @@ __kill_vscode_server() {
       {
         # 如果没有任何进程在 ? 终端下运行，则关闭进程
         _ps_eo=$(ps -eo pid,tty,stat,command)
-        if [[ "$(echo "$_ps_eo" | grep -v 'command$' | awk '$2 == "?"' | wc -l)" == "0" ]]; then
+        if [[ "$(echo "$_ps_eo" | grep -vE '(kill_vscode_server.sh|command)$' | awk '$2 == "?"' | wc -l)" == "0" ]]; then
           docker stop $HOSTNAME >/dev/null 2>&1
           return
         fi
