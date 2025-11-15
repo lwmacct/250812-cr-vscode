@@ -6,17 +6,18 @@ __kill_vscode_server() {
   if [[ $(ps -ef | grep -v $$ | grep 'type=fileWatcher$' -c) != '0' ]]; then return; fi
 
   {
-    # 如果没有任何进程在 ? 终端下运行，则关闭进程
-    if [[ "$(ps -eo pid,tty,stat,command | awk '$2 == "?"' | wc -l)" == "0" ]]; then
-      docker stop $HOSTNAME
-      return
-    fi
-  }
-
-  {
     # 如果是 linuxkit 系统，则直接关闭进程
     if [[ "$(uname -r | grep linuxkit -c)" == "1" ]]; then
       pkill -f '# Watch|vscode-server|cursor-server'
+      sleep 2
+      {
+        # 如果没有任何进程在 ? 终端下运行，则关闭进程
+        _ps_eo=$(ps -eo pid,tty,stat,command)
+        if [[ "$(echo "$_ps_eo" | grep -v 'command$' | awk '$2 == "?"' | wc -l)" == "0" ]]; then
+          docker stop $HOSTNAME >/dev/null 2>&1
+          return
+        fi
+      }
       return
     fi
   }
