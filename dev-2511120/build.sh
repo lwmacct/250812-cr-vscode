@@ -112,16 +112,7 @@ RUN set -eux; \
     echo "安装 Golang https://go.dev/dl/"; \
     _go_version=$(curl -sSL 'https://go.dev/dl/?mode=json' | jq -r '.[0].version'); \
     echo "获取到 Golang 最新版本: $_go_version"; \
-    curl -Lo - "https://go.dev/dl/$_go_version.linux-arm64.tar.gz" | tar zxf - -C /usr/local/; \
-    echo "安装常用 Go 工具"; \
-    /usr/local/go/bin/go install mvdan.cc/sh/v3/cmd/shfmt@latest; \
-    /usr/local/go/bin/go install golang.org/x/tools/cmd/godoc@latest; \
-    /usr/local/go/bin/go install golang.org/x/tools/cmd/goimports@latest; \
-    /usr/local/go/bin/go install google.golang.org/protobuf/cmd/protoc-gen-go@latest; \
-    /usr/local/go/bin/go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest; \
-    /usr/local/go/bin/go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest; \
-    /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest; \
-    echo "安装 Go 工具完成";
+    curl -Lo - "https://go.dev/dl/$_go_version.linux-arm64.tar.gz" | tar zxf - -C /usr/local/;
     
 RUN set -eux; \
     echo "常用包安装"; \
@@ -225,7 +216,7 @@ RUN echo "软链接 cron.d" ; \
     chmod 700 /root/.ssh; \
     echo "StrictHostKeyChecking no" >> /root/.ssh/config;
 
-ENV PATH=/usr/local/go/bin:/opt/venv/bin:/opt/fluent-bit/bin:/root/go/bin:$PATH
+ENV PATH=/root/.local/bin:/usr/local/go/bin:/opt/venv/bin:/opt/fluent-bit/bin:/root/go/bin:$PATH
 ENV TZ=Asia/Shanghai
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV GOPROXY=https://goproxy.cn,direct
