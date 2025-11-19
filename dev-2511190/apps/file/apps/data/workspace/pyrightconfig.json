@@ -1,0 +1,17 @@
+{
+  "include": ["."],
+  "exclude": [
+    "ln-*",
+    "**/__pycache__",
+    "**/node_modules",
+    "**/dist",
+    "**/build",
+    "**/venv",
+    "**/tmp",
+    "**/temp",
+    "**/cache",
+    "**/.venv",
+    "**/.git",
+    "**/*.egg-info"
+  ]
+}
