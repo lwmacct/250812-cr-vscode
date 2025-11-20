@@ -1,7 +1,7 @@
 # shellcheck disable=all
 # author https://github.com/lwmacct
 
-__load_taskfile_env() {
+__main() {
   # 禁用 glob 的 no_nomatch 选项, 避免 find 匹配不到文件时依然有输出 (仅 zsh)
   if [[ -n $ZSH_VERSION ]]; then setopt no_nomatch; fi
 
@@ -29,13 +29,8 @@ __load_taskfile_env() {
     done <<<"$_task_env"
   }
 
-}
-
-__main() {
-  # Caution: .env files in git repositories may contain potentially dangerous execution scripts
-  __load_taskfile_env
-
   {
+    # Load /root/.env file
     _env_file="/root/.env"
     set -a
     source $_env_file
@@ -43,4 +38,5 @@ __main() {
   }
 
 }
+
 __main

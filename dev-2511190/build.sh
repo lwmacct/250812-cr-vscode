@@ -207,8 +207,9 @@ RUN set -eux; \
     rm -rf ~/.npm /tmp/npm-cache;
 
 RUN set -eux; \
+    echo "2025-11-20 19:50:44"; \
     npm config set cache /tmp/npm-cache; \
-    npm install -g --no-cache @openai/codex @anthropic-ai/claude-code; \
+    npm install -g --no-cache @openai/codex @anthropic-ai/claude-code @google/gemini-cli; \
     npm cache clean --force; \
     rm -rf ~/.npm /tmp/npm-cache;
 
@@ -216,6 +217,7 @@ RUN echo "软链接 cron.d" ; \
     rm -rf /etc/cron.d/; \
     ln -sf /apps/data/cron.d/ /etc/cron.d; \
     ln -sf /bin/bash /bin/sh; \
+    ln -sf /usr/bin/fdfind /usr/bin/fd; \
     mkdir -p /root/.ssh; \
     chmod 700 /root/.ssh; \
     echo "StrictHostKeyChecking no" >> /root/.ssh/config;
