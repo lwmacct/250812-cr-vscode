@@ -141,7 +141,7 @@ RUN set -eux; \
     chmod +x /usr/local/bin/uv /usr/local/bin/uvx; \
     rm -rf /tmp/uv-aarch64-unknown-linux-gnu; \
     uv venv /opt/venv --system-site-packages; \
-    uv pip install --python /opt/venv/bin/python pip; \
+    uv pip install --python /opt/venv/bin/python --upgrade pip pre_commit black isort ruff rich textual; \
     /opt/venv/bin/pip config set global.index-url https://mirrors.ustc.edu.cn/pypi/simple; \
     uv -V; \
     echo;

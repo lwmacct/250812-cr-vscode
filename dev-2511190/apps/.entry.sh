@@ -2,10 +2,6 @@
 # Admin https://www.yuque.com/lwmacct
 
 __main() {
-  {
-    # 历史遗留处理
-    rm -rf /apps/data/init.d/99-supervisord.sh
-  }
 
   {
     : # 初始化文件
@@ -35,10 +31,10 @@ chown=nobody:nogroup
 [supervisord]
 user=root
 nodaemon=true
+pidfile=/var/run/supervisord.pid
 logfile=/var/log/supervisord.log
 logfile_maxbytes=5MB
 logfile_backups=2
-pidfile=/var/run/supervisord.pid
 
 [rpcinterface:supervisor]
 supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface

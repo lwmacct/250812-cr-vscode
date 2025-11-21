@@ -155,7 +155,7 @@ RUN set -eux; \
     chmod +x /usr/local/bin/uv /usr/local/bin/uvx; \
     rm -rf /tmp/uv-aarch64-unknown-linux-gnu; \
     uv venv /opt/venv --system-site-packages; \
-    uv pip install --python /opt/venv/bin/python pip; \
+    uv pip install --python /opt/venv/bin/python --upgrade pip pre_commit black isort ruff rich textual; \
     /opt/venv/bin/pip config set global.index-url https://mirrors.ustc.edu.cn/pypi/simple; \
     uv -V; \
     echo;
@@ -261,6 +261,7 @@ EOF
     echo "-----------------------------------"
     # docker buildx build --builder default --platform linux/arm64 -t "$_repository" --network host --progress plain --load --cache-to "type=registry,ref=$_buildcache,mode=max" --cache-from "type=registry,ref=$_buildcache" . && {
     docker buildx build --builder default --platform linux/arm64 -t "$_repository" --network host --progress plain --load . && {
+      # true/false
       if false; then
         docker rm -f sss
         docker run -itd --name=sss \
@@ -282,7 +283,7 @@ __help() {
   cat >/dev/null <<"EOF"
 这里可以写一些备注
 
-ghcr.io/lwmacct/250812-cr-vscode:dev-2511120
+ghcr.io/lwmacct/250812-cr-vscode:dev-2511190
 
 EOF
 }

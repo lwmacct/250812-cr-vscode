@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__ssh() {
+__main() {
   mkdir -p /root/.ssh
   chmod 700 /root/.ssh
 
@@ -9,7 +9,10 @@ __ssh() {
 
   # 如果 SSH_SECRET_KEY 为空，则生成新的 SSH 密钥
   if [[ -z "${SSH_SECRET_KEY}" ]]; then
-    ssh-keygen -t ed25519 -N '' -f /root/.ssh/id_ed25519 -C "$(hostname)"
+    # 只有当 id_ed25519 不存在时才生成，避免 Overwrite 提示
+    if [[ ! -f "/root/.ssh/id_ed25519" ]]; then
+      ssh-keygen -t ed25519 -N '' -f /root/.ssh/id_ed25519 -C "$(hostname)"
+    fi
   else
     # 如果 SSH_NOT_OVERWRITE 不为 1 或 id_ed25519 文件不存在，则写入 SSH_SECRET_KEY
     if [[ "${SSH_NOT_OVERWRITE}" != "1" || ! -f "/root/.ssh/id_ed25519" ]]; then
@@ -21,4 +24,4 @@ __ssh() {
   fi
 }
 
-__ssh
+__main

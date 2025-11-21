@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-cat >/apps/data/supervisor.d/cron.conf <<EOF
+__main() {
+
+  cat >/apps/data/supervisor.d/cron.conf <<EOF
 [program:cron]
 command=cron -f
 autostart=true
@@ -16,3 +18,4 @@ stderr_logfile_maxbytes=10MB
 stderr_logfile_backups=3
 environment=TERM="xterm"
 EOF
+}
