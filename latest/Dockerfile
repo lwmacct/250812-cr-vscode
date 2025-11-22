@@ -193,7 +193,7 @@ RUN set -eux; \
     rm -rf ~/.npm /tmp/npm-cache;
 
 RUN set -eux; \
-    echo "2025-11-20 19:50:44"; \
+    echo "2025-11-22 15:57:54"; \
     npm config set cache /tmp/npm-cache; \
     npm install -g --no-cache @openai/codex @anthropic-ai/claude-code @google/gemini-cli; \
     npm cache clean --force; \
