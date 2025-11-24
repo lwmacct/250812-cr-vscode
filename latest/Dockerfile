@@ -73,6 +73,18 @@ RUN set -eux; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
 
+# https://github.com/nektos/act
+RUN set -eux; \
+    echo "安装 act https://github.com/nektos/act"; \
+    _tag_name=$(curl -s https://api.github.com/repos/nektos/act/releases/latest | jq -r '.tag_name'); \
+    echo "获取到 act 最新版本: $_tag_name"; \
+    mkdir -p /tmp/act-install; \
+    wget -qO- "https://github.com/nektos/act/releases/download/$_tag_name/act_Linux_arm64.tar.gz" | tar -xzf - -C /tmp/act-install; \
+    mv /tmp/act-install/act /usr/local/bin/act; \
+    chmod +x /usr/local/bin/act; \
+    rm -rf /tmp/act-install; \
+    act --version;
+
 RUN set -eux; \
     echo "安装 docker-cli https://docs.docker.com/engine/install/ubuntu/"; \
     install -m 0755 -d /etc/apt/keyrings; \
