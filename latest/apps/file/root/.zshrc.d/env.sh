@@ -2,41 +2,39 @@
 # author https://github.com/lwmacct
 
 __main() {
-  # 禁用 glob 的 no_nomatch 选项, 避免 find 匹配不到文件时依然有输出 (仅 zsh)
-  if [[ -n $ZSH_VERSION ]]; then setopt no_nomatch; fi
+  [[ -n $ZSH_VERSION ]] && setopt no_nomatch
 
-  {
-    # Load .env.example files
-    _task_env="$(find /apps/data/workspace/*/.taskfile/ -maxdepth 1 -type f -name '.env.example' 2>/dev/null)"
-    while IFS= read -r _env_file; do
-      if [[ -f $_env_file ]]; then
-        set -a
-        source $_env_file
-        set +a
+  # 安全加载 env 文件：只解析 KEY=VALUE 格式，拒绝可执行内容
+  _safe_source_env() {
+    [[ ! -f $1 ]] && return
+    while IFS= read -r _line || [[ -n $_line ]]; do
+      # 跳过空行和注释
+      [[ -z $_line || $_line == \#* ]] && continue
+      # 严格匹配: KEY=VALUE 格式
+      if [[ $_line =~ ^[a-zA-Z_][a-zA-Z0-9_]*= ]]; then
+        # 使用 glob 模式检测危险字符: $ ` (比正则更兼容 zsh/bash)
+        if [[ $_line == *'$'* || $_line == *'`'* ]]; then
+          echo "[env.sh] 跳过危险行 ($1): $_line" >&2
+          continue
+        fi
+        export "${_line?}"
       fi
-    done <<<"$_task_env"
+    done <"$1"
   }
 
+  # 加载 workspace 下的环境变量文件 (按优先级排序)
   {
-    # Load .env files
-    _task_env="$(find /apps/data/workspace/*/.taskfile/ -maxdepth 1 -type f -name '.env' 2>/dev/null)"
-    while IFS= read -r _env_file; do
-      if [[ -f $_env_file ]]; then
-        set -a
-        source $_env_file
-        set +a
-      fi
-    done <<<"$_task_env"
-  }
+    # 1. .taskfile/.env.example (默认值)
+    # 2. .taskfile/.env (项目私有覆盖)
+    # 3. 项目根目录 .env (社区项目常用)
+    find /apps/data/workspace/*/.taskfile/ -maxdepth 1 -type f \( -name '.env.example' -o -name '.env' \) 2>/dev/null
+    find /apps/data/workspace/*/ -maxdepth 1 -type f -name '.env' 2>/dev/null
+  } | sort -u | while IFS= read -r _f; do
+    _safe_source_env "$_f"
+  done
 
-  {
-    # Load /root/.env file
-    _env_file="/root/.env"
-    set -a
-    source $_env_file
-    set +a
-  }
-
+  # 加载 /root/.env
+  _safe_source_env /root/.env
 }
 
 __main
