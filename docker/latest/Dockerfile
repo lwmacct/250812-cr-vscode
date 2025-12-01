@@ -198,6 +198,7 @@ RUN set -eux; \
         pm2 \
         prettier \
         typescript \
+        wrangler \
         npm-check-updates \
         @go-task/cli; \
     echo "Cleaning npm cache and temporary files"; \
@@ -205,7 +206,7 @@ RUN set -eux; \
     rm -rf ~/.npm /tmp/npm-cache;
 
 RUN set -eux; \
-    echo "202511280"; \
+    echo "2025-12-02 00:47:27"; \
     npm config set cache /tmp/npm-cache; \
     npm install -g --no-cache @openai/codex @anthropic-ai/claude-code @google/gemini-cli; \
     npm cache clean --force; \

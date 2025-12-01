@@ -212,6 +212,7 @@ RUN set -eux; \
         pm2 \
         prettier \
         typescript \
+        wrangler \
         npm-check-updates \
         @go-task/cli; \
     echo "Cleaning npm cache and temporary files"; \
@@ -219,7 +220,7 @@ RUN set -eux; \
     rm -rf ~/.npm /tmp/npm-cache;
 
 RUN set -eux; \
-    echo "202511280"; \
+    echo "2025-12-02 00:47:27"; \
     npm config set cache /tmp/npm-cache; \
     npm install -g --no-cache @openai/codex @anthropic-ai/claude-code @google/gemini-cli; \
     npm cache clean --force; \
@@ -254,7 +255,7 @@ EOF
     cd "$(dirname "$_sh_path")" || exit 1
     echo "$_dockerfile" >Dockerfile
 
-    _ghcr_source=$(sed 's|git@github.com:|https://github.com/|' ../.git/config | grep url | sed 's|.git$||' | awk '{print $NF}')
+    _ghcr_source=$(git remote get-url origin | head -n1 | sed 's|git@github.com:|https://github.com/|' | sed 's|.git$||')
     sed -i "s|\$_ghcr_source|$_ghcr_source|g" Dockerfile
   }
   {

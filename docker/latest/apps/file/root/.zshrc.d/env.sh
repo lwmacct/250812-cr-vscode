@@ -24,10 +24,7 @@ __main() {
 
   # 加载 workspace 下的环境变量文件 (按优先级排序)
   {
-    # 1. .taskfile/.env.example (默认值)
-    # 2. .taskfile/.env (项目私有覆盖)
-    # 3. 项目根目录 .env (社区项目常用)
-    find /apps/data/workspace/*/.taskfile/ -maxdepth 1 -type f \( -name '.env.example' -o -name '.env' \) 2>/dev/null
+    find /apps/data/workspace/*/ -maxdepth 1 -type f -name '.env.example' 2>/dev/null
     find /apps/data/workspace/*/ -maxdepth 1 -type f -name '.env' 2>/dev/null
   } | sort -u | while IFS= read -r _f; do
     _safe_source_env "$_f"
