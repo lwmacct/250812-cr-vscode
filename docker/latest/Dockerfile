@@ -153,7 +153,7 @@ RUN set -eux; \
     chmod +x /usr/local/bin/uv /usr/local/bin/uvx; \
     rm -rf /tmp/uv-aarch64-unknown-linux-gnu; \
     uv venv /opt/venv --system-site-packages; \
-    uv pip install --python /opt/venv/bin/python --upgrade pip pre_commit black isort ruff rich textual mcp-proxy; \
+    uv pip install --python /opt/venv/bin/python --upgrade pip pre_commit black isort ruff rich textual mcp-proxy md-toc; \
     /opt/venv/bin/pip config set global.index-url https://mirrors.ustc.edu.cn/pypi/simple; \
     uv -V; \
     echo;
@@ -206,7 +206,7 @@ RUN set -eux; \
     rm -rf ~/.npm /tmp/npm-cache;
 
 RUN set -eux; \
-    echo "2025-12-02 00:47:27"; \
+    echo "2025-12-03 03:51:08"; \
     npm config set cache /tmp/npm-cache; \
     npm install -g --no-cache @openai/codex @anthropic-ai/claude-code @google/gemini-cli; \
     npm cache clean --force; \
