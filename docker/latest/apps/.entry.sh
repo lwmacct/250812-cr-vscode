@@ -31,7 +31,7 @@ user=root
 nodaemon=true
 pidfile=/var/run/supervisord.pid
 logfile=/var/log/supervisord.log
-logfile_maxbytes=5MB
+logfile_maxbytes=100MB
 logfile_backups=2
 
 [rpcinterface:supervisor]
