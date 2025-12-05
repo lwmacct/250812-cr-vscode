@@ -2,8 +2,11 @@
   "include": ["."],
   "exclude": [
     "ln-*",
+    "docs",
+    "internal",
     "**/__pycache__",
     "**/node_modules",
+    "**/vendor",
     "**/dist",
     "**/build",
     "**/venv",

@@ -5,10 +5,8 @@ __main() {
 
   {
     : # 初始化文件
-    mkdir -p /apps/data/{workspace,logs,script,cron.d,supervisor.d}
-    tar -vcpf - -C /apps/file/root . | (cd /root && tar -xpf - --skip-old-files)
-    tar -vcpf - -C /apps/file/apps . | (cd /apps && tar -xpf - --skip-old-files)
-    tar -vcpf - -C /apps/file/etc . | (cd /etc && tar -xpf -)
+    # mkdir -p /apps/data/{workspace,logs,script,cron.d,supervisor.d}
+    tar -vcpf - -C /apps/links . | (cd / && tar -xpf - --skip-old-files)
     (cd /apps/data/workspace && go work init)
   } 2>&1 | tee /apps/data/logs/entry-tar.log
 
