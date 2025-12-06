@@ -227,6 +227,7 @@ ENV TZ=Asia/Shanghai
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV GOPROXY=https://goproxy.cn,direct
 ENV GO111MODULE=on
+ENV TASK_X_REMOTE_TASKFILES=1
 
 WORKDIR /apps/data
 COPY apps/ /apps/
