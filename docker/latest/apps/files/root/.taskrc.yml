@@ -1,5 +1,5 @@
 remote:
   insecure: false
   offline: false
-  timeout: "3s"
-  cache-expiry: "3s"
+  timeout: "30s"
+  cache-expiry: "24h"
