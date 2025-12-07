@@ -224,9 +224,12 @@ RUN echo "软链接 cron.d" ; \
 
 ENV PATH=/root/.local/bin:/usr/local/go/bin:/opt/venv/bin:/opt/fluent-bit/bin:/root/go/bin:$PATH
 ENV TZ=Asia/Shanghai
+ENV IS_SANDBOX=1
+ENV UV_LINK_MODE=copy
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV GOPROXY=https://goproxy.cn,direct
 ENV GO111MODULE=on
+ENV TASK_REMOTE_DIR=/root/.cache/taskfile
 ENV TASK_X_REMOTE_TASKFILES=1
 
 WORKDIR /apps/data
