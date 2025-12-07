@@ -220,7 +220,7 @@ RUN set -eux; \
     rm -rf ~/.npm /tmp/npm-cache;
 
 RUN set -eux; \
-    echo "2025-12-06 15:21:24"; \
+    echo "2025-12-07 20:11:03"; \
     echo "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"; \
     npm config set cache /tmp/npm-cache; \
     npm install -g --no-cache @openai/codex @anthropic-ai/claude-code @google/gemini-cli; \
@@ -287,7 +287,7 @@ EOF
         docker exec -it sss bash
       fi
     }
-    docker push "$_repository"
+    # docker push "$_repository"
 
   }
 }
