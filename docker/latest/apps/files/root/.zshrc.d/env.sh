@@ -26,7 +26,7 @@ __main() {
   {
     find /apps/data/workspace/*/ -maxdepth 1 -type f -name '.env.example' 2>/dev/null
     find /apps/data/workspace/*/ -maxdepth 1 -type f -name '.env' 2>/dev/null
-  } | sort -u | while IFS= read -r _f; do
+  } | grep -vE "(/ln-)|(vendor)" | while IFS= read -r _f; do
     _safe_source_env "$_f"
   done
 
