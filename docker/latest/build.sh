@@ -220,7 +220,7 @@ RUN set -eux; \
     rm -rf ~/.npm /tmp/npm-cache;
 
 RUN set -eux; \
-    echo "2025-12-16 17:26:25"; \
+    echo "2025-12-25 20:02:56"; \
     echo "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"; \
     npm config set cache /tmp/npm-cache; \
     npm install -g --no-cache @openai/codex @anthropic-ai/claude-code @google/gemini-cli; \
@@ -232,6 +232,7 @@ RUN echo "软链接 cron.d" ; \
     ln -sf /apps/data/cron.d/ /etc/cron.d; \
     ln -sf /bin/bash /bin/sh; \
     ln -sf /usr/bin/fdfind /usr/bin/fd; \
+    echo "alias npm='pnpm'" >> /etc/bash.bashrc; \
     mkdir -p /root/.ssh; \
     chmod 700 /root/.ssh; \
     echo "StrictHostKeyChecking no" >> /root/.ssh/config;
