@@ -209,15 +209,17 @@ RUN set -eux; \
         vue-tsc \
         yarn \
         pnpm \
+        bun \
         pm2 \
         prettier \
         typescript \
         wrangler \
         npm-check-updates \
+        @antfu/ni \
         @go-task/cli; \
     echo "Cleaning npm cache and temporary files"; \
     npm cache clean --force; \
-    rm -rf ~/.npm /tmp/npm-cache;
+    rm -rf ~/.npm /tmp/npm-cache
 
 RUN set -eux; \
     echo "2025-12-25 20:02:56"; \
@@ -225,14 +227,13 @@ RUN set -eux; \
     npm config set cache /tmp/npm-cache; \
     npm install -g --no-cache @openai/codex @anthropic-ai/claude-code @google/gemini-cli; \
     npm cache clean --force; \
-    rm -rf ~/.npm /tmp/npm-cache;
+    rm -rf ~/.npm /tmp/npm-cache
 
 RUN echo "软链接 cron.d" ; \
     rm -rf /etc/cron.d/; \
     ln -sf /apps/data/cron.d/ /etc/cron.d; \
     ln -sf /bin/bash /bin/sh; \
     ln -sf /usr/bin/fdfind /usr/bin/fd; \
-    echo "alias npm='pnpm'" >> /etc/bash.bashrc; \
     mkdir -p /root/.ssh; \
     chmod 700 /root/.ssh; \
     echo "StrictHostKeyChecking no" >> /root/.ssh/config;
