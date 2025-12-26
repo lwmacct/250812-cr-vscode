@@ -1,14 +1,29 @@
-# https://hub.docker.com/r/arm64v8/ubuntu/
-FROM arm64v8/ubuntu:noble-20251013
+#!/usr/bin/env bash
+# shellcheck disable=SC2317
+# document https://www.yuque.com/lwmacct/docker/buildx
+
+__main() {
+  {
+    _sh_path=$(realpath "$(ps -p $$ -o args= 2>/dev/null | awk '{print $2}')")    # 当前脚本路径
+    _dir_name=$(echo "$_sh_path" | awk -F '/' '{print $(NF-1)}')                  # 当前目录名
+    _pro_name=$(git remote get-url origin | head -n1 | xargs -r basename -s .git) # 当前仓库名
+    _image="${_pro_name}:$_dir_name"
+  }
+
+  _dockerfile=$(
+    cat <<"EOF"
+# https://hub.docker.com/_/ubuntu
+FROM ubuntu:noble-20251013
 LABEL maintainer="https://github.com/lwmacct"
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-lc"]
 
 RUN set -eux; \
-    echo "配置源, 容器内源文件为 /etc/apt/sources.list.d/ubuntu.sources"; \
-    sed -i 's@//ports.ubuntu.com@//mirrors.ustc.edu.cn@g' /etc/apt/sources.list.d/ubuntu.sources; \
+    echo "配置源,容器内源文件为 /etc/apt/sources.list.d/ubuntu.sources"; \
+    sed -i 's@//.*archive.ubuntu.com@//mirrors.ustc.edu.cn@g' /etc/apt/sources.list.d/ubuntu.sources; \
+    sed -i 's/security.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list.d/ubuntu.sources; \
     apt-get update; apt-get install -y --no-install-recommends ca-certificates curl wget sudo pcp gnupg; \
-    sed -i 's@http:@https:@g' /etc/apt/sources.list.d/ubuntu.sources; \
+    sed -i 's/http:/https:/g' /etc/apt/sources.list.d/ubuntu.sources; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*; \
     echo "设置 PS1"; \
@@ -35,8 +50,9 @@ RUN set -eux; \
     apt-get install -y --no-install-recommends \
         tini supervisor cron vim git jq bc tree zstd zip unzip xz-utils tzdata lsof expect tmux perl sshpass  \
         util-linux bash-completion dosfstools e2fsprogs parted dos2unix kmod pciutils moreutils psmisc \
-        openssl openssh-server nftables iptables iproute2 iputils-ping net-tools ethtool socat telnet mtr rsync nfs-common \
-        sysstat iftop htop iotop dstat; \
+        openssl openssh-server nftables iptables iproute2 iputils-ping net-tools ethtool socat telnet mtr rsync ipmitool nfs-common \
+        sysstat iftop htop iotop dstat \
+        ipmitool dmidecode smartmontools hardinfo lsscsi nvme-cli ; \
     rm -rf /*-is-merged; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*; \
@@ -58,7 +74,7 @@ RUN set -eux; \
 
 # https://github.com/etcd-io/etcd
 # curl -s https://api.github.com/repos/etcd-io/etcd/releases/latest | jq -r '.tag_name'
-COPY --from=gcr.io/etcd-development/etcd:v3.6.6-arm64 /usr/local/bin/etcdctl /usr/local/bin/etcdctl
+COPY --from=gcr.io/etcd-development/etcd:v3.6.7 /usr/local/bin/etcdctl /usr/local/bin/etcdctl
 
 RUN set -eux; \
     echo 'https://github.com/cli/cli#installation'; \
@@ -79,7 +95,7 @@ RUN set -eux; \
     _tag_name=$(curl -s https://api.github.com/repos/nektos/act/releases/latest | jq -r '.tag_name'); \
     echo "获取到 act 最新版本: $_tag_name"; \
     mkdir -p /tmp/act-install; \
-    wget -qO- "https://github.com/nektos/act/releases/download/$_tag_name/act_Linux_arm64.tar.gz" | tar -xzf - -C /tmp/act-install; \
+    wget -qO- "https://github.com/nektos/act/releases/download/$_tag_name/act_Linux_x86_64.tar.gz" | tar -xzf - -C /tmp/act-install; \
     mv /tmp/act-install/act /usr/local/bin/act; \
     chmod +x /usr/local/bin/act; \
     rm -rf /tmp/act-install; \
@@ -110,17 +126,16 @@ RUN set -eux; \
     echo "安装 Golang https://go.dev/dl/"; \
     _go_version=$(curl -sSL 'https://go.dev/dl/?mode=json' | jq -r '.[0].version'); \
     echo "获取到 Golang 最新版本: $_go_version"; \
-    curl -Lo - "https://go.dev/dl/$_go_version.linux-arm64.tar.gz" | tar zxf - -C /usr/local/;
-    
+    curl -Lo - "https://go.dev/dl/$_go_version.linux-amd64.tar.gz" | tar zxf - -C /usr/local/;
+
 RUN set -eux; \
     echo "常用包安装"; \
     apt-get update; apt-get install -y --no-install-recommends \
         bpfcc-tools linux-tools-common \
         build-essential gcc make cmake automake ninja-build shc upx \
-        openjdk-17-jdk \
-        file strace ltrace valgrind netcat-openbsd uuid-runtime \
+        file strace ltrace valgrind netcat-openbsd \
         git-lfs cron direnv shellcheck fzf zfsutils-linux xxd \
-        zsh redis-tools postgresql-client openssh-client supervisor \
+        zsh redis-tools openssh-client supervisor \
         xarclock xvfb x11vnc dbus-x11 \
         dnsutils \
         asciinema \
@@ -147,13 +162,13 @@ RUN set -eux; \
     echo "安装 uv"; \
     _tag_name=$(curl -s https://api.github.com/repos/astral-sh/uv/releases/latest | jq -r '.tag_name'); \
     echo "获取到 uv 最新版本: $_tag_name"; \
-    wget -qO- "https://github.com/astral-sh/uv/releases/download/$_tag_name/uv-aarch64-unknown-linux-gnu.tar.gz" | tar -xzf - -C /tmp; \
-    mv /tmp/uv-aarch64-unknown-linux-gnu/uv /usr/local/bin/uv; \
-    mv /tmp/uv-aarch64-unknown-linux-gnu/uvx /usr/local/bin/uvx; \
+    wget -qO- https://github.com/astral-sh/uv/releases/download/$_tag_name/uv-x86_64-unknown-linux-gnu.tar.gz | tar -xzf - -C /tmp; \
+    mv /tmp/uv-x86_64-unknown-linux-gnu/uv /usr/local/bin/uv; \
+    mv /tmp/uv-x86_64-unknown-linux-gnu/uvx /usr/local/bin/uvx; \
     chmod +x /usr/local/bin/uv /usr/local/bin/uvx; \
-    rm -rf /tmp/uv-aarch64-unknown-linux-gnu; \
+    rm -rf /tmp/uv-x86_64-unknown-linux-gnu; \
     uv venv /opt/venv --system-site-packages; \
-    uv pip install --python /opt/venv/bin/python --upgrade pip pre_commit black isort ruff rich textual mcp-proxy md-toc; \
+    uv pip install --python /opt/venv/bin/python pip; \
     /opt/venv/bin/pip config set global.index-url https://mirrors.ustc.edu.cn/pypi/simple; \
     uv -V; \
     echo;
@@ -239,6 +254,56 @@ COPY apps/ /apps/
 ENTRYPOINT ["tini", "--"]
 CMD ["sh", "-c", "bash /apps/.entry.sh"]
 
-LABEL org.opencontainers.image.source=https://github.com/lwmacct/250812-cr-vscode
+LABEL org.opencontainers.image.source=$_ghcr_source
 LABEL org.opencontainers.image.description="专为 VSCode 容器开发环境构建"
 LABEL org.opencontainers.image.licenses=MIT
+EOF
+  )
+  {
+    cd "$(dirname "$_sh_path")" || exit 1
+    echo "$_dockerfile" >Dockerfile
+
+    _ghcr_source=$(git remote get-url origin | head -n1 | sed 's|git@github.com:|https://github.com/|' | sed 's|.git$||')
+    sed -i "s|\$_ghcr_source|$_ghcr_source|g" Dockerfile
+  }
+  {
+    if command -v sponge >/dev/null 2>&1; then
+      jq 'del(.credsStore)' ~/.docker/config.json | sponge ~/.docker/config.json
+    else
+      jq 'del(.credsStore)' ~/.docker/config.json >~/.docker/config.json.tmp && mv ~/.docker/config.json.tmp ~/.docker/config.json
+    fi
+  }
+  {
+    _registry="ghcr.io/lwmacct" # 托管平台, 如果是 docker.io 则可以只填写用户名
+    _repository="$_registry/$_image"
+    _buildcache="$_registry/$_pro_name:cache"
+    echo "image: $_repository"
+    echo "cache: $_buildcache"
+    echo "-----------------------------------"
+    docker buildx build --builder default --platform linux/amd64 -t "$_repository" --network host --progress plain --load . && {
+      # true/false
+      if false; then
+        docker rm -f sss
+        docker run -itd --name=sss \
+          --restart=always \
+          --network=host \
+          --privileged=false \
+          "$_repository"
+        docker exec -it sss bash
+      fi
+    }
+    # docker push "$_repository"
+
+  }
+}
+
+__main
+
+__help() {
+  cat >/dev/null <<"EOF"
+这里可以写一些备注
+
+ghcr.io/lwmacct/250812-cr-vscode:latest
+
+EOF
+}
