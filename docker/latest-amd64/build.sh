@@ -292,7 +292,7 @@ EOF
         docker exec -it sss bash
       fi
     }
-    # docker push "$_repository"
+    docker push "$_repository"
 
   }
 }
@@ -303,7 +303,7 @@ __help() {
   cat >/dev/null <<"EOF"
 这里可以写一些备注
 
-ghcr.io/lwmacct/250812-cr-vscode:latest
+ghcr.io/lwmacct/250812-cr-vscode:latest-amd64
 
 EOF
 }
