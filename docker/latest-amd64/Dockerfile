@@ -81,7 +81,8 @@ RUN set -eux; \
     _tag_name=$(curl -s https://api.github.com/repos/nektos/act/releases/latest | jq -r '.tag_name'); \
     echo "获取到 act 最新版本: $_tag_name"; \
     mkdir -p /tmp/act-install; \
-    wget -qO- "https://github.com/nektos/act/releases/download/$_tag_name/act_Linux_x86_64.tar.gz" | tar -xzf - -C /tmp/act-install; \
+    _arch="x86_64"; \
+    wget -qO- "https://github.com/nektos/act/releases/download/$_tag_name/act_Linux_${_arch}.tar.gz" | tar -xzf - -C /tmp/act-install; \
     mv /tmp/act-install/act /usr/local/bin/act; \
     chmod +x /usr/local/bin/act; \
     rm -rf /tmp/act-install; \
@@ -144,17 +145,19 @@ RUN set -eux; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
 
+
 RUN set -eux; \
     echo "安装 uv"; \
+    _arch="x86_64"; \
     _tag_name=$(curl -s https://api.github.com/repos/astral-sh/uv/releases/latest | jq -r '.tag_name'); \
     echo "获取到 uv 最新版本: $_tag_name"; \
-    wget -qO- https://github.com/astral-sh/uv/releases/download/$_tag_name/uv-x86_64-unknown-linux-gnu.tar.gz | tar -xzf - -C /tmp; \
-    mv /tmp/uv-x86_64-unknown-linux-gnu/uv /usr/local/bin/uv; \
-    mv /tmp/uv-x86_64-unknown-linux-gnu/uvx /usr/local/bin/uvx; \
+    wget -qO- "https://github.com/astral-sh/uv/releases/download/$_tag_name/uv-${_arch}-unknown-linux-gnu.tar.gz" | tar -xzf - -C /tmp; \
+    mv /tmp/uv-${_arch}-unknown-linux-gnu/uv /usr/local/bin/uv; \
+    mv /tmp/uv-${_arch}-unknown-linux-gnu/uvx /usr/local/bin/uvx; \
     chmod +x /usr/local/bin/uv /usr/local/bin/uvx; \
-    rm -rf /tmp/uv-x86_64-unknown-linux-gnu; \
+    rm -rf /tmp/uv-${_arch}-unknown-linux-gnu; \
     uv venv /opt/venv --system-site-packages; \
-    uv pip install --python /opt/venv/bin/python pip; \
+    uv pip install --python /opt/venv/bin/python --upgrade pip pre_commit black isort ruff rich textual mcp-proxy md-toc; \
     /opt/venv/bin/pip config set global.index-url https://mirrors.ustc.edu.cn/pypi/simple; \
     uv -V; \
     echo;
