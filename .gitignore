@@ -5,22 +5,35 @@
 **/.conda/*
 **/.task/remote/*
 
+# 构建输出
+**/dist/**
+**/build/**
+**/*.vsix
+**/bin/
+
 # 秘密文件
 **/.env
 **/.secret/*
+**/config/config.yaml
 
 # node_modules
 **/node_modules/**
-**/pnpm-lock.yaml
-**/yarn.lock
 **/tsconfig.tsbuildinfo
 
+# 临时文件
+**/*.bak
+**/*.log
+**/*.tmp
+**/*.out
+**/*.temp
+**/*.cache
+
 # 临时目录
-**/tmp/**
-**/log/**
-**/logs/**
-**/temp/**
-**/cache/**
+tmp/**
+log/**
+logs/**
+temp/**
+cache/**
 
 # python
 __pycache__/
@@ -32,12 +45,15 @@ __pycache__/
 *.pywz
 *.pyzw
 
-# build binaries
-/bin/
-/main
-/client
-/server
+# 前端相关
+coverage/
+dist-ssr/
+.eslintcache
 
-# AI Agent 相关
-# **/.agent/*
-# **/.claude/*
+# Cypress
+/cypress/videos/
+/cypress/screenshots/
+
+# Vitest
+__screenshots__/
+__snapshots__/
