@@ -44,10 +44,16 @@ function fzf-path-widget() {
     local target
     # 当前目录下所有文件+目录，遵守 .gitignore，并去掉 ./ 前缀
     # 如需包含隐藏文件，可以改成： "${FD_CMD[@]}" --hidden .
-    target=$("${FD_CMD[@]}" . 2>/dev/null | fzf --height 40% --reverse) || return
+    target=$("${FD_CMD[@]}" . 2>/dev/null | fzf --height 40% --reverse --prompt '')
+    local ret=$?
+    if [[ $ret -ne 0 ]]; then
+      zle reset-prompt
+      return $ret
+    fi
 
     BUFFER="$target"
     CURSOR=${#BUFFER}
+    zle reset-prompt # 重绘命令行
   else
     # 非“空行前缀”时，当普通字符插入
     zle self-insert
