@@ -11,65 +11,78 @@ fi
 
 #### ----------------- 初始化 fd/fdfind -----------------
 # 用数组缓存命令和默认参数
-typeset -ga FD_CMD
+typeset -ga _FD_CMD
 
-function _fzf_path_init_fd() {
+__fzf_path_init_fd() {
   if command -v fd >/dev/null 2>&1; then
-    FD_CMD=(fd --strip-cwd-prefix)
+    _FD_CMD=(fd --strip-cwd-prefix)
   elif command -v fdfind >/dev/null 2>&1; then
-    FD_CMD=(fdfind --strip-cwd-prefix)
+    _FD_CMD=(fdfind --strip-cwd-prefix)
   else
-    FD_CMD=() # 没有可用 fd 命令
+    _FD_CMD=() # 没有可用 fd 命令
   fi
 }
 
-#### ----------------- 判断“当前行是否为空” -----------------
-# 把只包含空格/Tab 的情况也当作“空行”
-function _fzf_path_is_line_empty() {
-  local trimmed="$LBUFFER"
+#### ----------------- 判断"当前行是否为空" -----------------
+# 把只包含空格/Tab 的情况也当作"空行"
+__fzf_path_is_line_empty() {
+  local _trimmed="$LBUFFER"
   # 去掉开头的空白字符
-  trimmed="${trimmed#"${trimmed%%[![:space:]]*}"}"
-  [[ -z "$trimmed" ]]
+  _trimmed="${_trimmed#"${_trimmed%%[![:space:]]*}"}"
+  [[ -z "$_trimmed" ]]
 }
 
+#### ----------------- fzf 历史搜索 widget -----------------
+__fzf_history_widget() {
+  local _selected=$(fc -rl 1 | fzf --height 40% --reverse --prompt='' +s --tac)
+  if [[ -n "$_selected" ]]; then
+    # 移除历史行号前缀 (如 "  123 command")
+    local _cmd="${_selected#*[[:space:]][[:space:]]}"
+    BUFFER="$_cmd"
+    CURSOR=${#BUFFER}
+  fi
+  zle reset-prompt
+}
+zle -N __fzf_history_widget
+
 #### ----------------- fzf 选择文件/目录并插入 -----------------
-function fzf-path-widget() {
+__fzf_path_widget() {
   # 如果没 fd/fdfind，就退回普通字符行为
-  if ((${#FD_CMD[@]} == 0)); then
+  if ((${#_FD_CMD[@]} == 0)); then
     zle self-insert
     return
   fi
 
-  if _fzf_path_is_line_empty; then
-    local target
+  if __fzf_path_is_line_empty; then
+    local _target
     # 当前目录下所有文件+目录，遵守 .gitignore，并去掉 ./ 前缀
-    # 如需包含隐藏文件，可以改成： "${FD_CMD[@]}" --hidden .
-    target=$("${FD_CMD[@]}" . 2>/dev/null | fzf --height 40% --reverse --prompt '')
-    local ret=$?
-    if [[ $ret -ne 0 ]]; then
+    # 如需包含隐藏文件，可以改成： "${_FD_CMD[@]}" --hidden .
+    _target=$("${_FD_CMD[@]}" . 2>/dev/null | fzf --height 40% --reverse --prompt '')
+    local _ret=$?
+    if [[ $_ret -ne 0 ]]; then
       zle reset-prompt
-      return $ret
+      return $_ret
     fi
 
-    BUFFER="$target"
+    BUFFER="$_target"
     CURSOR=${#BUFFER}
     zle reset-prompt # 重绘命令行
   else
-    # 非“空行前缀”时，当普通字符插入
+    # 非"空行前缀"时，当普通字符插入
     zle self-insert
   fi
 }
 
-#### ----------------- 绑定按键 -----------------
-function _fzf_path_setup() {
-  _fzf_path_init_fd
+#### ----------------- 主入口 -----------------
+__main() {
+  __fzf_path_init_fd
 
   # 没有 fd/fdfind 就不绑定 widget，避免浪费按键
-  ((${#FD_CMD[@]} > 0)) || return
+  ((${#_FD_CMD[@]} > 0)) || return
 
-  zle -N fzf-path-widget
-  bindkey '/' fzf-path-widget
-  bindkey '@' fzf-path-widget
+  zle -N __fzf_path_widget
+  bindkey '/' __fzf_history_widget # / → 历史搜索
+  bindkey '@' __fzf_path_widget    # @ → 路径搜索
 }
 
-_fzf_path_setup
+__main
