@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 __main() {
-  mkdir -p /root/.ssh
-  chmod 700 /root/.ssh
+
+  mkdir -p /root/.ssh && chmod 700 /root/.ssh
 
   # 连接新设备时不提示指纹信息
   [[ ! -f "/root/.ssh/config" ]] && echo "StrictHostKeyChecking no" >>/root/.ssh/config

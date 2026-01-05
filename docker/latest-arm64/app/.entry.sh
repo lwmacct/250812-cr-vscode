@@ -2,23 +2,25 @@
 # Admin https://www.yuque.com/lwmacct
 
 __main() {
-
   {
-    : # 初始化文件
-    mkdir -p /app/data/{workspace,logs,supervisor.d}
-    tar -vcpf - -C /app/links . | (cd / && tar -xpf - --skip-old-files)
-    (cd /app/data/workspace && go work init)
-  } 2>&1 | tee /app/data/logs/entry-tar.log
+    {
+      : # 初始化文件
+      mkdir -p /app/data/workspace
+      tar -vcpf - -C /app/free . | (cd / && tar -xpf - --skip-old-files)
+      (cd /app/data && go work init)
+    }
 
-  {
-    echo "start init"
-    for _script in /app/data/init.d/*.sh; do
-      if [ -r "$_script" ]; then
-        echo "Run $_script"
-        timeout 30 bash "$_script"
-      fi
-    done
-  } 2>&1 | tee -a /app/data/logs/entry-init.log
+    {
+      echo "start init"
+      for _script in /app/data/init.d/*.sh; do
+        if [ -r "$_script" ]; then
+          echo "Run $_script"
+          timeout 15 bash "$_script"
+        fi
+      done
+    }
+
+  } 2>&1 | tee -a /var/log/entry.log
 
   cat >/etc/supervisord.conf <<EOF
 [unix_http_server]
