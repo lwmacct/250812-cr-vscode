@@ -1,18 +1,18 @@
 {
-  "include": ["."],
+  "include": ["workspace"],
   "exclude": [
     "ln-*",
-    "docs",
-    "internal",
+    "vendor",
     "**/__pycache__",
     "**/node_modules",
     "**/vendor",
+    "**/docs",
     "**/dist",
     "**/build",
-    "**/venv",
     "**/tmp",
     "**/temp",
     "**/cache",
+    "**/venv",
     "**/.venv",
     "**/.git",
     "**/*.egg-info"

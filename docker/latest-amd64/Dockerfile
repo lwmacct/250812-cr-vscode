@@ -221,7 +221,7 @@ RUN set -eux; \
 
 RUN echo "软链接 cron.d" ; \
     rm -rf /etc/cron.d/; \
-    ln -sf /apps/data/cron.d/ /etc/cron.d; \
+    ln -sf /app/data/cron.d/ /etc/cron.d; \
     ln -sf /bin/bash /bin/sh; \
     ln -sf /usr/bin/fdfind /usr/bin/fd; \
     mkdir -p /root/.ssh; \
@@ -238,10 +238,10 @@ ENV GO111MODULE=on
 ENV TASK_REMOTE_DIR=/root/.cache/taskfile
 ENV TASK_X_REMOTE_TASKFILES=1
 
-WORKDIR /apps/data
-COPY apps/ /apps/
+WORKDIR /app/data
+COPY apps/ /app/
 ENTRYPOINT ["tini", "--"]
-CMD ["sh", "-c", "bash /apps/.entry.sh"]
+CMD ["sh", "-c", "bash /app/.entry.sh"]
 
 LABEL org.opencontainers.image.source=https://github.com/lwmacct/250812-cr-vscode
 LABEL org.opencontainers.image.description="专为 VSCode 容器开发环境构建"

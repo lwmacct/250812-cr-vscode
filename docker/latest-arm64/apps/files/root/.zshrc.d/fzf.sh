@@ -1,7 +1,7 @@
 #### ----------------- 使用说明 -----------------
 #
 # 按键绑定：
-#   / → fzf 历史命令搜索
+#   > → fzf 历史命令搜索
 #   @ → fzf 文件/目录路径搜索
 #
 # 触发条件：
@@ -11,11 +11,11 @@
 # 示例：
 #   输入      触发    选择         结果
 #   ──────────────────────────────────────
-#   /        ✅      ls -la       ls -la
+#   >        ✅      ls -la       ls -la
 #   @        ✅      file.txt     file.txt
-#   abc /    ✅      ls -la       abc ls -la
+#   abc >    ✅      ls -la       abc ls -la
 #   abc @    ✅      file.txt     abc file.txt
-#   abc/     ❌      -            abc/
+#   abc>     ❌      -            abc>
 #   abc@     ❌      -            abc@
 #
 # 依赖：
@@ -65,10 +65,10 @@ __fzf_history_widget() {
     return
   fi
 
-  local _selected=$(fc -rl 1 | fzf --height 40% --reverse --prompt='' +s --tac)
+  local _selected=$(fc -ln 1 | grep . | fzf --height 40% --reverse --prompt='' +s --tac)
   if [[ -n "$_selected" ]]; then
-    # 移除历史行号前缀 (如 "  123 command")
-    local _cmd="${_selected#*[[:space:]][[:space:]]}"
+    # fc -ln 已无行号，直接使用（trim 前导空格）
+    local _cmd="${_selected#"${_selected%%[![:space:]]*}"}"
     # 追加到现有内容后面
     if [[ -z "$LBUFFER" ]]; then
       LBUFFER="$_cmd" # 空行直接追加
@@ -120,7 +120,7 @@ __main() {
   ((${#_FD_CMD[@]} > 0)) || return
 
   zle -N __fzf_path_widget
-  bindkey '/' __fzf_history_widget # / → 历史搜索
+  bindkey '>' __fzf_history_widget # > → 历史搜索
   bindkey '@' __fzf_path_widget    # @ → 路径搜索
 }
 

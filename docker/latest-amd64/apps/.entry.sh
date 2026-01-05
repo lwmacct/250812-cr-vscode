@@ -5,20 +5,20 @@ __main() {
 
   {
     : # 初始化文件
-    mkdir -p /apps/data/{workspace,logs,supervisor.d}
-    tar -vcpf - -C /apps/links . | (cd / && tar -xpf - --skip-old-files)
-    (cd /apps/data/workspace && go work init)
-  } 2>&1 | tee /apps/data/logs/entry-tar.log
+    mkdir -p /app/data/{workspace,logs,supervisor.d}
+    tar -vcpf - -C /app/links . | (cd / && tar -xpf - --skip-old-files)
+    (cd /app/data/workspace && go work init)
+  } 2>&1 | tee /app/data/logs/entry-tar.log
 
   {
     echo "start init"
-    for _script in /apps/data/init.d/*.sh; do
+    for _script in /app/data/init.d/*.sh; do
       if [ -r "$_script" ]; then
         echo "Run $_script"
         timeout 30 bash "$_script"
       fi
     done
-  } 2>&1 | tee -a /apps/data/logs/entry-init.log
+  } 2>&1 | tee -a /app/data/logs/entry-init.log
 
   cat >/etc/supervisord.conf <<EOF
 [unix_http_server]
@@ -43,7 +43,7 @@ prompt=mysupervisor
 history_file=~/.sc_history
 
 [include]
-files = /etc/supervisor/conf.d/*.conf /apps/data/supervisor.d/*.conf
+files = /etc/supervisor/conf.d/*.conf /app/data/supervisor.d/*.conf
 EOF
   exec supervisord
 

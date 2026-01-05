@@ -24,8 +24,8 @@ __main() {
 
   # 加载 workspace 下的环境变量文件 (按优先级排序)
   {
-    find /apps/data/workspace/*/ -maxdepth 1 -type f -name '.env.example' 2>/dev/null
-    find /apps/data/workspace/*/ -maxdepth 1 -type f -name '.env' 2>/dev/null
+    find /app/data/workspace/*/ -maxdepth 1 -type f -name '.env.example' 2>/dev/null
+    find /app/data/workspace/*/ -maxdepth 1 -type f -name '.env' 2>/dev/null
   } | grep -vE "(/ln-)|(vendor)" | while IFS= read -r _f; do
     _safe_source_env "$_f"
   done

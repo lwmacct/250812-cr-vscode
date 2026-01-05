@@ -5,14 +5,14 @@ __main() {
   {
     {
       : # 初始化文件
-      mkdir -p /apps/data/workspace
-      tar -vcpf - -C /apps/free . | (cd / && tar -xpf - --skip-old-files)
-      (cd /apps/data && go work init)
+      mkdir -p /app/data/workspace
+      tar -vcpf - -C /app/free . | (cd / && tar -xpf - --skip-old-files)
+      (cd /app/data && go work init)
     }
 
     {
       echo "start init"
-      for _script in /apps/data/init.d/*.sh; do
+      for _script in /app/data/init.d/*.sh; do
         if [ -r "$_script" ]; then
           echo "Run $_script"
           timeout 15 bash "$_script"
@@ -45,7 +45,7 @@ prompt=mysupervisor
 history_file=~/.sc_history
 
 [include]
-files = /etc/supervisor/conf.d/*.conf /apps/data/supervisor.d/*.conf
+files = /etc/supervisor/conf.d/*.conf /app/data/supervisor.d/*.conf
 EOF
   exec supervisord
 
