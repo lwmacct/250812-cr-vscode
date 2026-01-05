@@ -17,7 +17,7 @@ __main() {
     # 只在「交互式 shell 且不在 tmux 里」时自动执行
     if [[ $- == *i* ]] && [ -z "$TMUX" ]; then
       if ! tmux has-session -t "tmux" 2>/dev/null; then
-        cd "/apps/data/workspace" || true
+        cd "/app/data/workspace" || true
         tmux new-session -s "tmux" "$@"
       fi
     fi

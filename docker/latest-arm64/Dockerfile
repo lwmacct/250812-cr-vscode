@@ -237,7 +237,7 @@ ENV TASK_REMOTE_DIR=/root/.cache/taskfile
 ENV TASK_X_REMOTE_TASKFILES=1
 
 WORKDIR /app/data
-COPY apps/ /app/
+COPY app/ /app/
 ENTRYPOINT ["tini", "--"]
 CMD ["sh", "-c", "bash /app/.entry.sh"]
 
