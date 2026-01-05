@@ -1,1 +1,1 @@
-/apps/files/root/.profile
+/app/files/root/.profile

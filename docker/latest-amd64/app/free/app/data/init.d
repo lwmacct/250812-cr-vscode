@@ -1,1 +1,1 @@
-/apps/files/apps/data/init.d
+/app/files/app/data/init.d

@@ -2,6 +2,21 @@
 # Admin https://www.yuque.com/lwmacct
 
 __main() {
+
+  {
+    # 清理旧的符号链接
+    _is=$(ls -al /root | grep "/apps/files/root/.profile$" | wc -l)
+    echo "_is=$_is"
+
+    if [[ "$_is" != "0" ]]; then
+      echo "clean old symlinks"
+      find "/root" -maxdepth 1 -xtype l -delete
+      find "/app/data" -maxdepth 1 -xtype l -delete
+      sed -i 's|/apps/data|/app/data|g' /app/data/w.code-workspace
+      sync && sleep 1 && exit 0
+    fi
+  }
+
   {
     {
       : # 初始化文件

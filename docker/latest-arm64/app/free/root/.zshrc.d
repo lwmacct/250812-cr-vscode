@@ -1,1 +1,1 @@
-/apps/files/root/.zshrc.d
+/app/files/root/.zshrc.d
