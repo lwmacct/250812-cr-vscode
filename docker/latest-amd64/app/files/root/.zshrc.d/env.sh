@@ -1,37 +1,38 @@
 # shellcheck disable=all
 # author https://github.com/lwmacct
 
+# 安全加载 env 文件：只解析 KEY=VALUE 格式，拒绝可执行内容
+__safe_source_env() {
+  local file=$1
+  [[ ! -f $file ]] && return 0
+
+  local key value
+  while IFS='=' read -r key value || [[ -n $key ]]; do
+    # 跳过空行和注释
+    [[ -z $key || $key == \#* ]] && continue
+
+    # 验证 key 格式：必须是合法的变量名
+    [[ ! $key =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]] && continue
+
+    # 安全检测：拒绝包含危险字符的 value
+    case $value in
+    *'$'* | *'`'* | *'\\'*)
+      echo "[env.sh] 跳过危险行 ($file): $key=..." >&2
+      continue
+      ;;
+    esac
+
+    export "$key=$value"
+  done <"$file"
+}
+
 __main() {
   [[ -n $ZSH_VERSION ]] && setopt no_nomatch
 
-  # 安全加载 env 文件：只解析 KEY=VALUE 格式，拒绝可执行内容
-  _safe_source_env() {
-    [[ ! -f $1 ]] && return
-    while IFS= read -r _line || [[ -n $_line ]]; do
-      # 跳过空行和注释
-      [[ -z $_line || $_line == \#* ]] && continue
-      # 严格匹配: KEY=VALUE 格式
-      if [[ $_line =~ ^[a-zA-Z_][a-zA-Z0-9_]*= ]]; then
-        # 使用 glob 模式检测危险字符: $ ` (比正则更兼容 zsh/bash)
-        if [[ $_line == *'$'* || $_line == *'`'* ]]; then
-          echo "[env.sh] 跳过危险行 ($1): $_line" >&2
-          continue
-        fi
-        export "${_line?}"
-      fi
-    done <"$1"
-  }
-
-  # 加载 workspace 下的环境变量文件 (按优先级排序)
-  {
-    find /app/data/workspace/*/ -maxdepth 1 -type f -name '.env.example' 2>/dev/null
-    find /app/data/workspace/*/ -maxdepth 1 -type f -name '.env' 2>/dev/null
-  } | grep -vE "(/ln-)|(vendor)" | while IFS= read -r _f; do
-    _safe_source_env "$_f"
-  done
-
-  # 加载 /root/.env
-  _safe_source_env /root/.env
+  # 按优先级加载 env 文件（后加载的覆盖先加载的）
+  __safe_source_env /app/data/workspace/.env.example
+  __safe_source_env /app/data/workspace/.env
+  __safe_source_env /root/.env
 }
 
 __main

@@ -2,7 +2,7 @@
 # author https://github.com/lwmacct
 
 # 安全加载 env 文件：只解析 KEY=VALUE 格式，拒绝可执行内容
-_safe_source_env() {
+__safe_source_env() {
   local file=$1
   [[ ! -f $file ]] && return 0
 
@@ -16,23 +16,23 @@ _safe_source_env() {
 
     # 安全检测：拒绝包含危险字符的 value
     case $value in
-      *'$'* | *'`'* | *'\\'*)
-        echo "[env.sh] 跳过危险行 ($file): $key=..." >&2
-        continue
-        ;;
+    *'$'* | *'`'* | *'\\'*)
+      echo "[env.sh] 跳过危险行 ($file): $key=..." >&2
+      continue
+      ;;
     esac
 
     export "$key=$value"
-  done < "$file"
+  done <"$file"
 }
 
 __main() {
   [[ -n $ZSH_VERSION ]] && setopt no_nomatch
 
   # 按优先级加载 env 文件（后加载的覆盖先加载的）
-  _safe_source_env /app/data/workspace/.env.example
-  _safe_source_env /app/data/workspace/.env
-  _safe_source_env /root/.env
+  __safe_source_env /app/data/workspace/.env.example
+  __safe_source_env /app/data/workspace/.env
+  __safe_source_env /root/.env
 }
 
 __main
