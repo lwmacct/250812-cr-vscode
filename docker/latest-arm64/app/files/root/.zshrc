@@ -14,8 +14,11 @@ __main() {
   if [[ "$BASH_VERSION" != "" ]]; then return; fi
 
   {
-    # 只在「交互式 shell 且不在 tmux 里」时自动执行
-    if [[ $- == *i* ]] && [ -z "$TMUX" ]; then
+    # 满足以下条件时自动启动 tmux:
+    # 1. 交互式 shell
+    # 2. 不在 tmux 里
+    # 3. 已有 zsh 进程运行
+    if [[ $- == *i* ]] && [ -z "$TMUX" ] && [[ $(pgrep zsh -c) -ge 2 ]]; then
       if ! tmux has-session -t "tmux" 2>/dev/null; then
         cd "/app/data/workspace" || true
         tmux new-session -s "tmux" "$@"
