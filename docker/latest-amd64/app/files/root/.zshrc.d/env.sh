@@ -29,10 +29,10 @@ __safe_source_env() {
 __main() {
   [[ -n $ZSH_VERSION ]] && setopt no_nomatch
 
-  # 按优先级加载 env 文件（后加载的覆盖先加载的）
+  # 按优先级加载 env 文件
   __safe_source_env /app/data/workspace/.env.example
-  __safe_source_env /app/data/workspace/.env
   __safe_source_env /root/.env
+  __safe_source_env /app/data/workspace/.env
 }
 
 __main
