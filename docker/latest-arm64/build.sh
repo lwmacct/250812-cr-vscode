@@ -131,8 +131,9 @@ RUN set -eux; \
     echo "常用包安装"; \
     apt-get update; apt-get install -y --no-install-recommends \
         bpfcc-tools linux-tools-common \
-        build-essential gcc make cmake automake ninja-build shc upx \
+        build-essential gcc clang make cmake automake ninja-build pkg-config shc upx \
         openjdk-17-jdk \
+        libgtk-3-dev libgtk-4-dev  libssl-dev  librsvg2-dev  libayatana-appindicator3-dev libwebkit2gtk-4.1-dev \
         file strace ltrace valgrind netcat-openbsd uuid-runtime \
         git-lfs cron direnv shellcheck fzf zfsutils-linux xxd \
         zsh redis-tools postgresql-client openssh-client supervisor \
@@ -224,7 +225,7 @@ RUN set -eux; \
     rm -rf ~/.npm /tmp/npm-cache
 
 RUN set -eux; \
-    echo "20260109"; \
+    echo "20260111"; \
     echo "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"; \
     npm config set cache /tmp/npm-cache; \
     npm install -g --no-cache @openai/codex @anthropic-ai/claude-code @google/gemini-cli; \
