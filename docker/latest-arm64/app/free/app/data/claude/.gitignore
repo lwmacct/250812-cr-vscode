@@ -1,0 +1,15 @@
+# 忽略当前目录下所有内容
+*
+
+# 允许当前目录下的 .gitignore 自己被跟踪（否则规则文件也会被忽略）
+!.gitignore
+
+# 不忽略的内容
+!agents/
+!commands/
+!skills/
+!rules/
+
+!settings.json
+!.credentials.json
+!CLAUDE.md
