@@ -1,7 +1,4 @@
 {
-  "$docs": "https://code.claude.com/docs/en/settings",
-  "officialMarketplaceAutoInstalled": false,
-  "attribution": { "commit": "", "pr": "" },
   "fileSuggestion": {
     "type": "command",
     "command": "/app/files/app/data/claude/scripts/file-suggestion.sh"
@@ -16,9 +13,16 @@
     "IS_SANDBOX": "1",
     "MAX_THINKING_TOKENS": "12000"
   },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "permissions": {
     "allow": ["WebSearch"],
     "deny": ["Read(./.env)"],
     "defaultMode": "bypassPermissions"
-  }
+  },
+  "$docs": "https://code.claude.com/docs/en/settings",
+  "officialMarketplaceAutoInstalled": false,
+  "language": "chinese"
 }

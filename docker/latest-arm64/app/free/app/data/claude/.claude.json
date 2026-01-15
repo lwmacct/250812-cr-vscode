@@ -1,4 +1,5 @@
 {
+  "autoInstallIdeExtension": false,
   "hasCompletedOnboarding": true,
   "bypassPermissionsModeAccepted": true,
   "hasIdeOnboardingBeenShown": {
