@@ -21,6 +21,7 @@ __main() {
     {
       : # 初始化文件
       mkdir -p /app/data/workspace
+      mkdir -p /app/data/root/.vscode-server/data
       tar -vcpf - -C /app/free . | (cd / && tar -xpf - --skip-old-files)
       (cd /app/data && go work init)
     }
