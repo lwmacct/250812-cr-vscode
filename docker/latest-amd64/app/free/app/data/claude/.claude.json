@@ -1,0 +1,7 @@
+{
+  "hasCompletedOnboarding": true,
+  "bypassPermissionsModeAccepted": true,
+  "hasIdeOnboardingBeenShown": {
+    "vscode": true
+  }
+}
