@@ -1,6 +1,7 @@
 {
   "autoInstallIdeExtension": false,
   "hasCompletedOnboarding": true,
+  "officialMarketplaceAutoInstalled": false,
   "bypassPermissionsModeAccepted": true,
   "hasIdeOnboardingBeenShown": {
     "vscode": true
