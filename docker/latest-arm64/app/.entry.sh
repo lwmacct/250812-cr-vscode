@@ -1,6 +1,19 @@
 #!/usr/bin/env bash
 # Admin https://www.yuque.com/lwmacct
 
+__lwmacct() {
+  # 这部分是作者的私有逻辑, 仅在作者的环境中生效
+  _git_user=$(git config --global user.name)
+  if [[ "$_git_user" != "lwmacct" ]]; then return; fi
+  mkdir -p /app/data/claude && cd /app/data/claude || return
+
+  if [ ! -d "/app/data/claude/commands" ]; then ln -sfn /data/project/260101-claude-code/claude/commands commands; fi
+  if [ ! -d "/app/data/claude/rules" ]; then ln -sfn /data/project/260101-claude-code/claude/rules rules; fi
+  if [ ! -d "/app/data/claude/skills" ]; then ln -sfn /data/project/260101-claude-code/claude/skills skills; fi
+
+}
+# __lwmacct
+
 __main() {
 
   {
@@ -14,6 +27,7 @@ __main() {
       find "/app/data" -maxdepth 1 -xtype l -delete
       sed -i 's|/apps/data|/app/data|g' /app/data/w.code-workspace
       sync && sleep 1 && exit 0
+      __lwmacct
     fi
   }
 
