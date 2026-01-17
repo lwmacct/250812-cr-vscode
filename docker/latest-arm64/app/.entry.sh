@@ -27,7 +27,6 @@ __main() {
       find "/app/data" -maxdepth 1 -xtype l -delete
       sed -i 's|/apps/data|/app/data|g' /app/data/w.code-workspace
       sync && sleep 1 && exit 0
-      __lwmacct
     fi
   }
 
@@ -50,6 +49,7 @@ __main() {
       done
     }
 
+    __lwmacct
   } 2>&1 | tee -a /var/log/entry.log
 
   cat >/etc/supervisord.conf <<EOF
