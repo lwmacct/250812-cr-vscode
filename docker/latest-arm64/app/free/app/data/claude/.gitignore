@@ -10,6 +10,8 @@
 !skills/
 !rules/
 
+!project/
+
 # 允许特定文件被跟踪
 !settings.json
 !.credentials.json
