@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Admin https://www.yuque.com/lwmacct
+# Admin https://github.com/lwmacct
 
 __lwmacct() {
   # 这部分是作者的私有逻辑, 仅在作者的环境中生效
@@ -10,6 +10,7 @@ __lwmacct() {
   if [ ! -d "/app/data/claude/commands" ]; then ln -sfn /data/project/260101-claude-code/claude/commands commands; fi
   if [ ! -d "/app/data/claude/rules" ]; then ln -sfn /data/project/260101-claude-code/claude/rules rules; fi
   if [ ! -d "/app/data/claude/skills" ]; then ln -sfn /data/project/260101-claude-code/claude/skills skills; fi
+  if [ ! -f "/app/data/claude/CLAUDE.md" ]; then ln -sfn /data/project/260101-claude-code/claude/CLAUDE.md CLAUDE.md; fi
 
 }
 # __lwmacct
