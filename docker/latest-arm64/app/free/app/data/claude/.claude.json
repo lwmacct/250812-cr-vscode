@@ -6,5 +6,28 @@
   "bypassPermissionsModeAccepted": true,
   "hasIdeOnboardingBeenShown": {
     "vscode": true
+  },
+  "projects": {
+    "/app/data/workspace": {
+      "disabledMcpServers": ["playwright"]
+    }
+  },
+  "mcpServers": {
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest",
+        "--cdp-endpoint=http://localhost:9222"
+      ]
+    },
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
+      }
+    }
   }
 }
