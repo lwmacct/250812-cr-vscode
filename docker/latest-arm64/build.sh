@@ -228,8 +228,14 @@ RUN set -eux; \
     echo "20260117"; \
     echo "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"; \
     npm config set cache /tmp/npm-cache; \
-    npm install -g --no-cache @openai/codex @anthropic-ai/claude-code @google/gemini-cli; \
+    npm install -g --no-cache @openai/codex @google/gemini-cli; \
     npm cache clean --force; \
+    rm -rf ~/.npm /tmp/npm-cache
+
+RUN set -eux; \
+    echo "20260123"; \
+    echo "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"; \
+    curl -fsSL https://claude.ai/install.sh | bash; \
     rm -rf ~/.npm /tmp/npm-cache
 
 RUN echo "软链接 cron.d" ; \
@@ -284,7 +290,7 @@ EOF
     echo "-----------------------------------"
     # docker buildx build --builder default --platform linux/arm64 -t "$_repository" --network host --progress plain --load --cache-to "type=registry,ref=$_buildcache,mode=max" --cache-from "type=registry,ref=$_buildcache" . && {
     docker buildx build --builder default --platform linux/arm64 -t "$_repository" --network host --progress plain --load . && {
-      # true/false
+      # false/false
       if false; then
         docker rm -f sss
         docker run -itd --name=sss \

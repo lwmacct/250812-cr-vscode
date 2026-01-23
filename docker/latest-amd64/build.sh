@@ -228,12 +228,19 @@ RUN set -eux; \
     rm -rf ~/.npm /tmp/npm-cache
 
 RUN set -eux; \
-    echo "20260117"; \
+    echo "20260123"; \
     echo "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"; \
-    npm config set cache /tmp/npm-cache; \
-    npm install -g --no-cache @openai/codex @anthropic-ai/claude-code @google/gemini-cli; \
-    npm cache clean --force; \
+    curl -fsSL https://claude.ai/install.sh | bash; \
     rm -rf ~/.npm /tmp/npm-cache
+
+RUN echo "软链接 cron.d" ; \
+    rm -rf /etc/cron.d/; \
+    ln -sf /app/data/cron.d/ /etc/cron.d; \
+    ln -sf /bin/bash /bin/sh; \
+    ln -sf /usr/bin/fdfind /usr/bin/fd; \
+    mkdir -p /root/.ssh; \
+    chmod 700 /root/.ssh; \
+    echo "StrictHostKeyChecking no" >> /root/.ssh/config;
 
 RUN echo "软链接 cron.d" ; \
     rm -rf /etc/cron.d/; \
