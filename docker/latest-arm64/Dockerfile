@@ -218,12 +218,6 @@ RUN set -eux; \
     npm cache clean --force; \
     rm -rf ~/.npm /tmp/npm-cache
 
-RUN set -eux; \
-    echo "20260123"; \
-    echo "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"; \
-    curl -fsSL https://claude.ai/install.sh | bash; \
-    rm -rf ~/.npm /tmp/npm-cache
-
 RUN echo "软链接 cron.d" ; \
     rm -rf /etc/cron.d/; \
     ln -sf /app/data/cron.d/ /etc/cron.d; \
