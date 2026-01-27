@@ -211,7 +211,7 @@ RUN set -eux; \
     rm -rf ~/.npm /tmp/npm-cache
 
 RUN set -eux; \
-    echo "20260117"; \
+    echo "20260127"; \
     echo "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"; \
     npm config set cache /tmp/npm-cache; \
     npm install -g --no-cache @openai/codex @google/gemini-cli; \
