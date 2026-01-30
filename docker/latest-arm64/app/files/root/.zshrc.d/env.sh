@@ -22,6 +22,15 @@ __safe_source_env() {
       ;;
     esac
 
+    # 去掉包裹型引号（成对的单/双引号），兼容 bash/zsh
+    if [[ $value == \"*\" && $value == *\" ]]; then
+      value=${value#\"}
+      value=${value%\"}
+    elif [[ $value == \'*\' && $value == *\' ]]; then
+      value=${value#\'}
+      value=${value%\'}
+    fi
+
     export "$key=$value"
   done <"$file"
 }

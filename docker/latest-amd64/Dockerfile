@@ -222,6 +222,14 @@ RUN echo "软链接 cron.d" ; \
     chmod 700 /root/.ssh; \
     echo "StrictHostKeyChecking no" >> /root/.ssh/config;
 
+RUN set -eux; \
+    echo "2026-01-30 12:53:56"; \
+    echo "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"; \
+    npm config set cache /tmp/npm-cache; \
+    npm install -g --no-cache @openai/codex @google/gemini-cli; \
+    npm cache clean --force; \
+    rm -rf ~/.npm /tmp/npm-cache
+
 RUN echo "软链接 cron.d" ; \
     rm -rf /etc/cron.d/; \
     ln -sf /app/data/cron.d/ /etc/cron.d; \
