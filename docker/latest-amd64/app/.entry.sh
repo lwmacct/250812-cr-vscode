@@ -18,6 +18,14 @@ __lwmacct() {
 __main() {
 
   {
+    # 数据隔离, 这一步很关键
+    if [ ! -L "${TARGET}" ]; then
+      mkdir -p /app/data/root/.vscode-server/data
+      ln -sfn /app/data/root/.vscode-server/data /root/.vscode-server/data
+    fi
+  }
+
+  {
     # 清理旧的符号链接
     _is=$(ls -al /root | grep "/apps/files/root/.profile$" | wc -l)
     echo "_is=$_is"
