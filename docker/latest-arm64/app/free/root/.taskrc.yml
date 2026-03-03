@@ -1,1 +1,5 @@
-/app/files/root/.taskrc.yml
+remote:
+  insecure: false
+  offline: false
+  timeout: "30s"
+  cache-expiry: "24h"

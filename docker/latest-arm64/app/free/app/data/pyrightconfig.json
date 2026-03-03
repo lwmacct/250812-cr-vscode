@@ -1,1 +1,20 @@
-/app/files/app/data/pyrightconfig.json
+{
+  "include": ["workspace"],
+  "exclude": [
+    "ln-*",
+    "vendor",
+    "**/__pycache__",
+    "**/node_modules",
+    "**/vendor",
+    "**/docs",
+    "**/dist",
+    "**/build",
+    "**/tmp",
+    "**/temp",
+    "**/cache",
+    "**/venv",
+    "**/.venv",
+    "**/.git",
+    "**/*.egg-info"
+  ]
+}

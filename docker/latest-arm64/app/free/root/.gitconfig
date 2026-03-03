@@ -1,1 +1,13 @@
-/data/shared/root/.gitconfig
+[user]
+	name = lwmacct
+	email = lwmacct@icloud.com
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA7GLhSRGMwJWTh8t+qY3qyHknB79VgMZeYMIDm6ZEsG lwm-docker-251216
+[push]
+	autoSetupRemote = true
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true
+[tag]
+	gpgSign = true
+
