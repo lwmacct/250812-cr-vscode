@@ -237,7 +237,7 @@ RUN echo "软链接 cron.d" ; \
     echo "StrictHostKeyChecking no" >> /root/.ssh/config;
 
 RUN set -eux; \
-    echo "20260204"; \
+    echo "2603051"; \
     echo "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"; \
     npm config set cache /tmp/npm-cache; \
     npm install -g --no-cache @openai/codex @google/gemini-cli; \
