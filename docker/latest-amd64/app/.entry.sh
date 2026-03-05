@@ -19,7 +19,7 @@ __main() {
 
   {
     # 数据隔离, 这一步很关键
-    if [ ! -L "${TARGET}" ]; then
+    if [ ! -L "/root/.vscode-server/data" ]; then
       mkdir -p /app/data/root/.vscode-server/data
       ln -sfn /app/data/root/.vscode-server/data /root/.vscode-server/data
     fi
