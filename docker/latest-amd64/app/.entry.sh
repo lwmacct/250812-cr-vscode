@@ -1,6 +1,22 @@
 #!/usr/bin/env bash
 # Admin https://github.com/lwmacct
 
+__update_260114() {
+  # 更新旧的项目结构, 仓库直接放置到 workspace 目录下, 之前的结构是 workspace/项目名
+  _name="$(hostname)"
+  if [[ "$(echo "$_name" | grep '^[0-9]{6}-' -Ec)" != "1" ]]; then return; fi
+
+  _project_dir="/app/data/workspace/$_name"
+  _backups_dir="/app/data/workspace-260106"
+
+  # 如果项目目录存在, 则进行迁移到新的结构
+  if [ -d "$_project_dir" ]; then
+    mv /app/data/workspace $_backups_dir        # 备份工作区
+    mv $_backups_dir/$_name /app/data/workspace # 恢复工作区
+  fi
+}
+__update_260114
+
 __lwmacct() {
   # 这部分是作者的私有逻辑, 仅在作者的环境中生效
   _git_user=$(git config --global user.name)
