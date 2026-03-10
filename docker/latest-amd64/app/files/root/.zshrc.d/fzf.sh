@@ -120,7 +120,7 @@ __main() {
   ((${#_FD_CMD[@]} > 0)) || return
 
   zle -N __fzf_path_widget
-  bindkey '>' __fzf_history_widget # > → 历史搜索
+  bindkey '#' __fzf_history_widget # # → 历史搜索
   bindkey '@' __fzf_path_widget    # @ → 路径搜索
 }
 
