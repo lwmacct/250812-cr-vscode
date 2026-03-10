@@ -13,7 +13,7 @@ __main() {
     _dockerfile=$(
         cat <<"EOF"
 # https://hub.docker.com/_/ubuntu
-FROM ubuntu:noble-20251013
+FROM ubuntu:noble-20260210.1
 LABEL maintainer="https://github.com/lwmacct"
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-lc"]

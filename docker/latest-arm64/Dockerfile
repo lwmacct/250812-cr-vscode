@@ -1,5 +1,5 @@
 # https://hub.docker.com/r/arm64v8/ubuntu/
-FROM arm64v8/ubuntu:noble-20251013
+FROM arm64v8/ubuntu:noble-20260210.1
 LABEL maintainer="https://github.com/lwmacct"
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-lc"]
