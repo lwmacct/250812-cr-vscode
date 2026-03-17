@@ -238,7 +238,7 @@ EOF
         docker exec -it sss bash
       fi
     }
-    # docker push "$_repository"
+    docker push "$_repository"
 
   }
 }
