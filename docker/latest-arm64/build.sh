@@ -175,63 +175,6 @@ RUN set -eux; \
     uv -V; \
     echo;
 
-ENV NVM_DIR=/opt/nvm 
-ENV NODE_VERSION="lts/*"
-RUN set -eux; \
-  echo "安装 nvm + Node LTS"; \
-  _tag_name=$(curl -s https://api.github.com/repos/nvm-sh/nvm/releases/latest | jq -r '.tag_name'); \
-  echo "获取到 nvm 最新版本: $_tag_name"; \
-  mkdir -p "$NVM_DIR" \
-  && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$_tag_name/install.sh | PROFILE=/dev/null bash \
-  && source "$NVM_DIR/nvm.sh" \
-  && nvm install "$NODE_VERSION" \
-  && nvm alias default "$NODE_VERSION" \
-  && node -v && npm -v; \
-  echo; \
-  echo "登录/交互式 bash 自动加载 nvm"; \
-  printf 'export NVM_DIR="/opt/nvm"\n[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"\n' > /etc/profile.d/nvm.sh; \
-  grep -q 'profile.d/nvm.sh' /etc/bash.bashrc || echo '[ -f /etc/profile.d/nvm.sh ] && . /etc/profile.d/nvm.sh' >> /etc/bash.bashrc; \
-  echo; \
-  echo "非交互 bash 自动加载 nvm"; \
-  cat /etc/profile.d/nvm.sh >> /etc/bash_env; \
-  echo;
-
-ENV BASH_ENV=/etc/bash_env
-
-RUN set -eux; \
-    npm -v; \
-    npm install -g npm@latest; \
-    npm -v; \
-    echo "Configuring npm to minimize cache"; \
-    npm config set cache /tmp/npm-cache; \
-    npm config set prefer-offline false; \
-    echo "Installing global npm packages"; \
-    npm install -g --no-cache \
-        vitest \
-        degit \
-        vue-tsc \
-        yarn \
-        pnpm \
-        bun \
-        pm2 \
-        prettier \
-        typescript \
-        wrangler \
-        npm-check-updates \
-        @antfu/ni \
-        @go-task/cli; \
-    echo "Cleaning npm cache and temporary files"; \
-    npm cache clean --force; \
-    rm -rf ~/.npm /tmp/npm-cache
-
-RUN set -eux; \
-    echo "20260317104746"; \
-    echo "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"; \
-    npm config set cache /tmp/npm-cache; \
-    npm install -g --no-cache @openai/codex @google/gemini-cli; \
-    npm cache clean --force; \
-    rm -rf ~/.npm /tmp/npm-cache
-
 RUN echo "软链接 cron.d" ; \
     rm -rf /etc/cron.d/; \
     ln -sf /app/data/cron.d/ /etc/cron.d; \
@@ -286,16 +229,16 @@ EOF
     docker buildx build --builder default --platform linux/arm64 -t "$_repository" --network host --progress plain --load . && {
       # false/false
       if false; then
-        docker rm -f sss
+        docker rm -f sss >/dev/null 2>&1 || true
         docker run -itd --name=sss \
-          --restart=none \
+          --restart=unless-stopped \
           --network=host \
           --privileged=false \
           "$_repository"
         docker exec -it sss bash
       fi
     }
-    docker push "$_repository"
+    # docker push "$_repository"
 
   }
 }
