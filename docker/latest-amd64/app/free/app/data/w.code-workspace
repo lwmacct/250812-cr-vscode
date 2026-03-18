@@ -2,7 +2,7 @@
   "folders": [
     { "path": "/app/data/workspace" },
     { "path": "/app/data/claude" },
-    { "path": "/app/data" }
+    { "path": "/app/data" },
   ],
-  "settings": {}
+  "settings": {},
 }

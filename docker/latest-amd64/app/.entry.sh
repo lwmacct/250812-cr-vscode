@@ -42,26 +42,11 @@ __main() {
   }
 
   {
-    # 清理旧的符号链接
-    _is=$(ls -al /root | grep "/apps/files/root/.profile$" | wc -l)
-    echo "_is=$_is"
-
-    if [[ "$_is" != "0" ]]; then
-      echo "clean old symlinks"
-      find "/root" -maxdepth 1 -xtype l -delete
-      find "/app/data" -maxdepth 1 -xtype l -delete
-      sed -i 's|/apps/data|/app/data|g' /app/data/w.code-workspace
-      sync && sleep 1 && exit 0
-    fi
-  }
-
-  {
     {
       : # 初始化文件
       mkdir -p /app/data/workspace
-      mkdir -p /app/data/codex
-      mkdir -p /app/data/root/.vscode-server/data
       tar -vcpf - -C /app/free . | (cd / && tar -xpf - --skip-old-files)
+      ln -sfn /app/data/w.code-workspace /root/w.code-workspace
       (cd /app/data && go work init)
     }
 
@@ -101,7 +86,7 @@ prompt=mysupervisor
 history_file=~/.sc_history
 
 [include]
-files = /etc/supervisor/conf.d/*.conf /app/data/supervisor.d/*.conf
+files = /etc/supervisor/conf.d/*.conf /app/data/supervisor.d/*.conf /app/files/app/data/supervisor.d/*.conf
 EOF
   exec supervisord
 
