@@ -1,42 +1,15 @@
 #!/usr/bin/env bash
 # Admin https://github.com/lwmacct
 
-__update_260114() {
-  # 更新旧的项目结构, 仓库直接放置到 workspace 目录下, 之前的结构是 workspace/项目名
-  _name="$(hostname)"
-  if [[ "$(echo "$_name" | grep '^[0-9]{6}-' -Ec)" != "1" ]]; then return; fi
-
-  _project_dir="/app/data/workspace/$_name"
-  _backups_dir="/app/data/workspace-260106"
-
-  # 如果项目目录存在, 则进行迁移到新的结构
-  if [ -d "$_project_dir" ]; then
-    mv /app/data/workspace $_backups_dir        # 备份工作区
-    mv $_backups_dir/$_name /app/data/workspace # 恢复工作区
-  fi
-}
-__update_260114
-
-__lwmacct() {
-  # 这部分是作者的私有逻辑, 仅在作者的环境中生效
-  _git_user=$(git config --global user.name)
-  if [[ "$_git_user" != "lwmacct" ]]; then return; fi
-  mkdir -p /app/data/claude && cd /app/data/claude || return
-
-  if [ ! -d "/app/data/claude/commands" ]; then ln -sfn /data/project/260101-claude-code/claude/commands commands; fi
-  if [ ! -d "/app/data/claude/rules" ]; then ln -sfn /data/project/260101-claude-code/claude/rules rules; fi
-  if [ ! -d "/app/data/claude/skills" ]; then ln -sfn /data/project/260101-claude-code/claude/skills skills; fi
-  if [ ! -f "/app/data/claude/CLAUDE.md" ]; then ln -sfn /data/project/260101-claude-code/claude/CLAUDE.md CLAUDE.md; fi
-
-}
-# __lwmacct
-
 __main() {
 
   {
     # 数据隔离, 这一步很关键
-    mkdir -p /app/data/root/.vscode-server/data
-    ln -sfn /app/data/root/.vscode-server/data /root/.vscode-server/data
+    # 如果 /app/data 是挂载路径
+    if [[ "$(mount | grep '\s/app/data/?\s' -Ec)" == "1" ]]; then
+      mkdir -p /app/data/root/.vscode-server/data
+      ln -sfn /app/data/root/.vscode-server/data /root/.vscode-server/data
+    fi
   }
 
   {
