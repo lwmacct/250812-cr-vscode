@@ -32,15 +32,13 @@ __main() {
     ZSH_THEME="bira" # robbyrussell=默认主题, agnoster=高亮主题, bira = 简单主题
     ZSH_COMPDUMP="${ZDOTDIR:-$HOME}/.zcompdump"
     plugins=(
+      git
+      docker
       zsh-autosuggestions
       zsh-syntax-highlighting
       zsh-completions
       per-directory-history
-      zsh-history-substring-search
-      you-should-use
       zsh-interactive-cd
-      git
-      docker
     )
     source $ZSH/oh-my-zsh.sh
   }
