@@ -1,5 +1,5 @@
 # https://hub.docker.com/r/arm64v8/ubuntu/
-FROM arm64v8/ubuntu:noble-20260210.1
+FROM arm64v8/ubuntu:noble-20260217
 LABEL maintainer="https://github.com/lwmacct"
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-lc"]
@@ -58,7 +58,7 @@ RUN set -eux; \
 
 # https://github.com/etcd-io/etcd
 # curl -s https://api.github.com/repos/etcd-io/etcd/releases/latest | jq -r '.tag_name'
-COPY --from=gcr.io/etcd-development/etcd:v3.6.7-arm64 /usr/local/bin/etcdctl /usr/local/bin/etcdctl
+COPY --from=gcr.io/etcd-development/etcd:v3.6.10-arm64 /usr/local/bin/etcdctl /usr/local/bin/etcdctl
 
 RUN set -eux; \
     echo 'https://github.com/cli/cli#installation'; \

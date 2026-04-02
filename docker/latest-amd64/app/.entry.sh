@@ -1,23 +1,13 @@
 #!/usr/bin/env bash
-# Admin https://github.com/lwmacct
+# author https://github.com/lwmacct
 
-__main() {
-
-  {
-    # 数据隔离, 这一步很关键
-    # 如果 /app/data 是挂载路径
-    if [[ "$(mount | grep '\s/app/data/?\s' -Ec)" == "1" ]]; then
-      mkdir -p /app/data/root/.vscode-server/data
-      ln -sfn /app/data/root/.vscode-server/data /root/.vscode-server/data
-    fi
-  }
-
+__release() {
+  : # 释放资源
   {
     {
       : # 初始化文件
       mkdir -p /app/data/workspace
       tar -vcpf - -C /app/free . | (cd / && tar -xpf - --skip-old-files)
-      ln -sfn /app/data/w.code-workspace /root/w.code-workspace
       (cd /app/data && go work init)
     }
 
@@ -33,6 +23,9 @@ __main() {
 
     __lwmacct
   } 2>&1 | tee -a /var/log/entry.log
+}
+
+__supervisord() {
 
   cat >/etc/supervisord.conf <<EOF
 [unix_http_server]
@@ -59,6 +52,12 @@ history_file=~/.sc_history
 [include]
 files = /etc/supervisor/conf.d/*.conf /app/data/supervisor.d/*.conf /app/files/app/data/supervisor.d/*.conf
 EOF
+}
+
+__main() {
+
+  __release
+  __supervisord
   exec supervisord
 
 }

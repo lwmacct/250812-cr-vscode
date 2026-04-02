@@ -1,7 +1,8 @@
 {
   "folders": [
     { "path": "/app/data/workspace" },
-    { "path": "/app/data/claude" },
+    // { "path": "/app/data/claude" },
+    // { "path": "/app/data/codex" },
     { "path": "/app/data" },
   ],
   "settings": {},
