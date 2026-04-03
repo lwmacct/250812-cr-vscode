@@ -8,7 +8,7 @@ __release() {
       : # 初始化文件
       mkdir -p /app/data/workspace
       tar -vcpf - -C /app/free . | (cd / && tar -xpf - --skip-old-files)
-      (cd /app/data && go work init)
+      (cd /app/data && go work init && go work use workspace) 2>/dev/null || true
     }
 
     {
