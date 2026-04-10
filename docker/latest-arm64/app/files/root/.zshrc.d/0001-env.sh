@@ -42,6 +42,12 @@ __main() {
   __safe_source_env /app/data/workspace/.env.example
   __safe_source_env /root/.env
   __safe_source_env /app/data/workspace/.env
+
+  # 将变量 DIND_HOST 的值写入 /etc/hosts 中的主机名 dind-host
+  [[ -n "$DIND_HOST" ]] && {
+    sed -i '/dind-host/d' /etc/hosts
+    echo "$DIND_HOST dind-host" >>/etc/hosts
+  }
 }
 
 __main
