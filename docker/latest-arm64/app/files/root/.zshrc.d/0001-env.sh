@@ -45,9 +45,13 @@ __main() {
 
   # 将变量 DIND_HOST 的值写入 /etc/hosts 中的主机名 dind-host
   [[ -n "$DIND_HOST" ]] && {
-    sed -i '/dind-host/d' /etc/hosts
-    echo "$DIND_HOST dind-host" >>/etc/hosts
+    grep -v 'dind-host' /etc/hosts | {
+      cat
+      echo "$DIND_HOST dind-host"
+    } >/tmp/hosts
+    cat /tmp/hosts >/etc/hosts
   }
+
 }
 
 __main
