@@ -147,6 +147,7 @@ RUN set -eux; \
         git-lfs cron direnv shellcheck fzf zfsutils-linux xxd shfmt \
         zsh redis-tools postgresql-client openssh-client kcat \
         xarclock xvfb x11vnc dbus-x11 \
+        protobuf-compiler \
         dnsutils \
         asciinema \
         umoci skopeo \
