@@ -5,5 +5,7 @@
     // { "path": "/app/data/codex" },
     { "path": "/app/data" },
   ],
-  "settings": {},
+  "settings": {
+    "shfmt.executableArgs": ["-i", "2"],
+  },
 }
