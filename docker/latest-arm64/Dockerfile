@@ -144,7 +144,7 @@ RUN set -eux; \
         openjdk-17-jdk \
         libgtk-3-dev libgtk-4-dev  libssl-dev  librsvg2-dev  libayatana-appindicator3-dev libwebkit2gtk-4.1-dev \
         file strace ltrace valgrind netcat-openbsd uuid-runtime \
-        git-lfs cron direnv shellcheck fzf zfsutils-linux xxd shfmt \
+        git-lfs cron direnv shellcheck fzf zfsutils-linux xxd shfmt bats \
         zsh redis-tools postgresql-client openssh-client kcat \
         xarclock xvfb x11vnc dbus-x11 \
         protobuf-compiler \
