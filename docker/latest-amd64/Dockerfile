@@ -34,7 +34,7 @@ RUN set -eux; \
     apt-get update; \
     apt-get dist-upgrade -y; \
     apt-get install -y --no-install-recommends \
-        tini supervisor cron vim git jq bc tree zstd zip unzip xz-utils tzdata lsof expect tmux perl sshpass  \
+        tini supervisor cron vim git jq bc tree zstd zip unzip xz-utils tzdata lsof expect tmux perl sshpass \
         util-linux bash-completion dosfstools e2fsprogs parted dos2unix kmod pciutils moreutils psmisc \
         openssl openssh-server nftables iptables iproute2 iputils-ping net-tools ethtool socat telnet mtr rsync nfs-common \
         sysstat iftop htop iotop dstat; \
@@ -146,7 +146,7 @@ RUN set -eux; \
         libgtk-3-dev libgtk-4-dev  libssl-dev  librsvg2-dev  libayatana-appindicator3-dev libwebkit2gtk-4.1-dev \
         file strace ltrace valgrind netcat-openbsd uuid-runtime \
         git-lfs cron direnv shellcheck fzf zfsutils-linux xxd shfmt bats \
-        zsh redis-tools postgresql-client openssh-client kcat \
+        zsh redis-tools postgresql-client openssh-client kcat sqlite3 \
         xarclock xvfb x11vnc dbus-x11 \
         protobuf-compiler \
         dnsutils \
@@ -181,7 +181,7 @@ RUN set -eux; \
     chmod +x /usr/local/bin/uv /usr/local/bin/uvx; \
     rm -rf /tmp/uv-${_arch}-unknown-linux-gnu; \
     uv venv /opt/venv --system-site-packages; \
-    uv pip install --python /opt/venv/bin/python --upgrade pip pre_commit black isort ruff rich textual mcp-proxy md-toc; \
+    uv pip install --python /opt/venv/bin/python --upgrade pip pre_commit black isort ruff rich textual mcp-proxy md-toc litecli sqlite-utils sqlite-web; \
     /opt/venv/bin/pip config set global.index-url https://mirrors.ustc.edu.cn/pypi/simple; \
     uv -V; \
     echo;
