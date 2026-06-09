@@ -1,12 +1,14 @@
-# https://hub.docker.com/r/arm64v8/ubuntu/
-FROM arm64v8/ubuntu:noble-20260410
+# https://hub.docker.com/_/ubuntu
+FROM ubuntu:resolute-20260421
 LABEL maintainer="https://github.com/lwmacct"
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-lc"]
 
 RUN set -eux; \
     echo "配置源, 容器内源文件为 /etc/apt/sources.list.d/ubuntu.sources"; \
+    sed -i 's@//.*archive.ubuntu.com@//mirrors.ustc.edu.cn@g' /etc/apt/sources.list.d/ubuntu.sources; \
     sed -i 's@//ports.ubuntu.com@//mirrors.ustc.edu.cn@g' /etc/apt/sources.list.d/ubuntu.sources; \
+    sed -i 's/security.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list.d/ubuntu.sources; \
     apt-get update; apt-get install -y --no-install-recommends ca-certificates curl wget sudo pcp gnupg; \
     sed -i 's@http:@https:@g' /etc/apt/sources.list.d/ubuntu.sources; \
     apt-get clean; \
@@ -112,31 +114,6 @@ RUN set -eux; \
     curl -Lo - "https://go.dev/dl/$_go_version.linux-arm64.tar.gz" | tar zxf - -C /usr/local/;
 
 RUN set -eux; \
-    echo "安装 Confluent 源并安装 librdkafka1, 解决 librdkafka 2.3.0 版本过低问题"; \
-    install -m 0755 -d /etc/apt/keyrings; \
-    wget -qO- https://packages.confluent.io/deb/8.2/archive.key | gpg --dearmor -o /etc/apt/keyrings/confluent.gpg; \
-    CP_DIST=$(. /etc/os-release && echo "$VERSION_CODENAME"); \
-    printf '%s\n' \
-        'Types: deb' \
-        'URIs: https://packages.confluent.io/deb/8.2' \
-        'Suites: stable' \
-        'Components: main' \
-        "Architectures: $(dpkg --print-architecture)" \
-        'Signed-By: /etc/apt/keyrings/confluent.gpg' \
-        '' \
-        'Types: deb' \
-        'URIs: https://packages.confluent.io/clients/deb/' \
-        "Suites: ${CP_DIST}" \
-        'Components: main' \
-        "Architectures: $(dpkg --print-architecture)" \
-        'Signed-By: /etc/apt/keyrings/confluent.gpg' \
-        >/etc/apt/sources.list.d/confluent-platform.sources; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends librdkafka1; \
-    apt-get clean; \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
-
-RUN set -eux; \
     echo "常用包安装"; \
     apt-get update; apt-get install -y --no-install-recommends \
         bpfcc-tools linux-tools-common \
@@ -145,7 +122,7 @@ RUN set -eux; \
         libgtk-3-dev libgtk-4-dev  libssl-dev  librsvg2-dev  libayatana-appindicator3-dev libwebkit2gtk-4.1-dev \
         file strace ltrace valgrind netcat-openbsd uuid-runtime \
         git-lfs cron direnv shellcheck fzf zfsutils-linux xxd shfmt bats \
-        zsh redis-tools postgresql-client openssh-client kcat sqlite3 \
+        zsh redis-tools postgresql-client pgloader openssh-client kcat librdkafka1 sqlite3 \
         xarclock xvfb x11vnc dbus-x11 \
         protobuf-compiler \
         dnsutils \
