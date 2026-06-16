@@ -43,11 +43,11 @@ __main() {
   __safe_source_env /root/.env
   __safe_source_env /app/data/workspace/.env
 
-  # 将变量 DIND_HOST 的值写入 /etc/hosts 中的主机名 dind-host
-  [[ -n "$DIND_HOST" ]] && {
-    grep -v 'dind-host' /etc/hosts | {
+  # 将变量 RUNNER_HOST 的值写入 /etc/hosts 中的主机名 runner
+  [[ -n "$RUNNER_HOST" ]] && {
+    grep -v 'runner' /etc/hosts | {
       cat
-      echo "$DIND_HOST dind-host"
+      echo "$RUNNER_HOST runner"
     } >/tmp/hosts
     cat /tmp/hosts >/etc/hosts
   }
