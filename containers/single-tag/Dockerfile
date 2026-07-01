@@ -218,14 +218,20 @@ RUN_EOF
 
 RUN <<'RUN_EOF'
 set -eux
-echo "软链接 cron.d"
+echo "运行期收尾配置"
+
+echo "配置 cron.d"
 rm -rf /etc/cron.d/
 ln -sf /app/data/cron.d/ /etc/cron.d
+
+echo "配置 shell/tool 兼容链接"
 ln -sf /bin/bash /bin/sh
 ln -sf /usr/bin/fdfind /usr/bin/fd
-mkdir -p /root/.ssh
-chmod 700 /root/.ssh
+
+echo "配置 SSH 默认行为"
+install -d -m 700 /root/.ssh
 echo "StrictHostKeyChecking no" >> /root/.ssh/config
+
 echo "配置运行期 apt 源"
 cp /etc/apt/ubuntu.sources.origin /etc/apt/sources.list.d/ubuntu.sources
 sed -i \
