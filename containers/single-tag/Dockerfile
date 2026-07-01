@@ -6,17 +6,14 @@ FROM ubuntu:resolute-20260421
 LABEL maintainer="https://github.com/lwmacct"
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TARGETARCH
-ARG APT_ARCHIVE_MIRROR=http://azure.archive.ubuntu.com/ubuntu
-ARG APT_PORTS_MIRROR=http://azure.ports.ubuntu.com/ubuntu-ports
-ARG APT_SECURITY_MIRROR=http://azure.archive.ubuntu.com/ubuntu
 SHELL ["/bin/bash", "-lc"]
 
 RUN <<'RUN_EOF'
 set -eux
 echo "配置源, 容器内源文件为 /etc/apt/sources.list.d/ubuntu.sources"
-sed -i -E "s@https?://([^/]+\.)?archive\.ubuntu\.com/ubuntu/?@${APT_ARCHIVE_MIRROR}@g" /etc/apt/sources.list.d/ubuntu.sources
-sed -i -E "s@https?://ports\.ubuntu\.com/ubuntu-ports/?@${APT_PORTS_MIRROR}@g" /etc/apt/sources.list.d/ubuntu.sources
-sed -i -E "s@https?://security\.ubuntu\.com/ubuntu/?@${APT_SECURITY_MIRROR}@g" /etc/apt/sources.list.d/ubuntu.sources
+sed -i -E 's@https?://([^/]+\.)?archive\.ubuntu\.com/ubuntu/?@http://azure.archive.ubuntu.com/ubuntu@g' /etc/apt/sources.list.d/ubuntu.sources
+sed -i -E 's@https?://ports\.ubuntu\.com/ubuntu-ports/?@http://azure.ports.ubuntu.com/ubuntu-ports@g' /etc/apt/sources.list.d/ubuntu.sources
+sed -i -E 's@https?://security\.ubuntu\.com/ubuntu/?@http://azure.archive.ubuntu.com/ubuntu@g' /etc/apt/sources.list.d/ubuntu.sources
 cat /etc/apt/sources.list.d/ubuntu.sources
 apt-get update
 apt-get install -y --no-install-recommends ca-certificates curl wget sudo pcp gnupg
@@ -217,6 +214,7 @@ echo
 RUN_EOF
 
 RUN <<'RUN_EOF'
+set -eux
 echo "软链接 cron.d"
 rm -rf /etc/cron.d/
 ln -sf /app/data/cron.d/ /etc/cron.d
@@ -225,6 +223,13 @@ ln -sf /usr/bin/fdfind /usr/bin/fd
 mkdir -p /root/.ssh
 chmod 700 /root/.ssh
 echo "StrictHostKeyChecking no" >> /root/.ssh/config
+echo "还原 apt 源为 mirrors.ustc.edu.cn"
+sed -i -E 's@https?://([^/]+\.)?archive\.ubuntu\.com/ubuntu/?@https://mirrors.ustc.edu.cn/ubuntu@g' /etc/apt/sources.list.d/ubuntu.sources
+sed -i -E 's@https?://azure\.archive\.ubuntu\.com/ubuntu/?@https://mirrors.ustc.edu.cn/ubuntu@g' /etc/apt/sources.list.d/ubuntu.sources
+sed -i -E 's@https?://ports\.ubuntu\.com/ubuntu-ports/?@https://mirrors.ustc.edu.cn/ubuntu-ports@g' /etc/apt/sources.list.d/ubuntu.sources
+sed -i -E 's@https?://azure\.ports\.ubuntu\.com/ubuntu-ports/?@https://mirrors.ustc.edu.cn/ubuntu-ports@g' /etc/apt/sources.list.d/ubuntu.sources
+sed -i -E 's@https?://security\.ubuntu\.com/ubuntu/?@https://mirrors.ustc.edu.cn/ubuntu@g' /etc/apt/sources.list.d/ubuntu.sources
+cat /etc/apt/sources.list.d/ubuntu.sources
 RUN_EOF
 
 ENV PATH=/root/.local/bin:/usr/local/go/bin:/opt/venv/bin:/opt/fluent-bit/bin:/root/go/bin:$PATH

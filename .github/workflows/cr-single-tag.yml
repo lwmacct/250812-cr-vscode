@@ -38,19 +38,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          cache: npm
-          cache-dependency-path: containers/single-tag/package-lock.json
-
-      - name: Install dependencies
-        run: npm --prefix containers/single-tag ci
-
-      - name: Generate Dockerfile
-        run: npm --prefix containers/single-tag run generate
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
@@ -79,10 +66,6 @@ jobs:
           platforms: ${{ matrix.platform }}
           outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            APT_ARCHIVE_MIRROR=http://azure.archive.ubuntu.com/ubuntu
-            APT_PORTS_MIRROR=http://azure.ports.ubuntu.com/ubuntu-ports
-            APT_SECURITY_MIRROR=http://azure.archive.ubuntu.com/ubuntu
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.cache }}
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.cache }},mode=max
           provenance: false

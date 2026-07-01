@@ -11,13 +11,9 @@
 - `uv`: `x86_64` vs `aarch64`
 - `etcdctl`: 现有 arm64 Dockerfile 使用 `v3.6.11-arm64`，但 `gcr.io/etcd-development/etcd:v3.6.11` 本身已经包含 `linux/amd64` 和 `linux/arm64`
 
-统一 `Dockerfile.hbs` 使用 BuildKit 自动注入的 `TARGETARCH` 来映射这些下载名，并通过 `index.js` 生成 `Dockerfile`，模式参考 `/data/project/260629-cr-nginx/workspace`。
+统一 `Dockerfile` 使用 BuildKit 自动注入的 `TARGETARCH` 来映射这些下载名。这个目录现在以 `Dockerfile` 作为唯一事实来源，不再通过模板生成。
 
-apt 源通过 Docker build args 配置；GitHub Actions 中显式使用 Azure Ubuntu 镜像源，更靠近 hosted runner 网络：
-
-- `APT_ARCHIVE_MIRROR=http://azure.archive.ubuntu.com/ubuntu`
-- `APT_PORTS_MIRROR=http://azure.ports.ubuntu.com/ubuntu-ports`
-- `APT_SECURITY_MIRROR=http://azure.archive.ubuntu.com/ubuntu`
+构建阶段硬编码使用 Azure Ubuntu 镜像源，更靠近 hosted runner 网络；镜像末尾会把 apt 源还原为 `mirrors.ustc.edu.cn`，方便交互使用。
 
 ## 构建
 
@@ -32,10 +28,3 @@ PLATFORMS=linux/amd64,linux/arm64 containers/single-tag/build.sh
 ```
 
 构建上下文必须是仓库根目录，因为 Dockerfile 复用现有的 `docker/latest-amd64/app/` 作为公共运行资源。
-
-只生成 Dockerfile：
-
-```bash
-npm --prefix containers/single-tag ci
-npm --prefix containers/single-tag run generate
-```
