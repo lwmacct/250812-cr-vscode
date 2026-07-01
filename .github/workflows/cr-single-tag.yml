@@ -26,9 +26,11 @@ jobs:
           - platform: linux/amd64
             runner: ubuntu-latest
             artifact: digest-linux-amd64
+            cache: buildcache-amd64
           - platform: linux/arm64
             runner: ubuntu-24.04-arm
             artifact: digest-linux-arm64
+            cache: buildcache-arm64
 
     runs-on: ${{ matrix.runner }}
 
@@ -77,6 +79,8 @@ jobs:
           platforms: ${{ matrix.platform }}
           outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
           labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.cache }}
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.cache }},mode=max
           provenance: false
 
       - name: Export digest
