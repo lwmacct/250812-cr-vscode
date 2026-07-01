@@ -1,8 +1,0 @@
-**
-!docker/
-!docker/latest-amd64/
-!docker/latest-amd64/app/
-!docker/latest-amd64/app/**
-!containers/
-!containers/single-tag/
-!containers/single-tag/Dockerfile

@@ -1,13 +1,9 @@
-name: single-tag-container
+name: latest-container
 
 on:
-  workflow_dispatch:
-    inputs:
-      image_tag:
-        description: "Tag to publish on ghcr.io/<owner>/<repo>"
-        required: true
-        default: "test-single"
-        type: string
+  push:
+    tags:
+      - "v*"
 
 permissions:
   contents: read
@@ -54,15 +50,15 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=${{ inputs.image_tag }}
-            type=sha,prefix=sha-
+            type=raw,value=latest
+            type=ref,event=tag
 
       - name: Build and publish image digest
         id: build
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: containers/single-tag/Dockerfile
+          file: containers/latest/Dockerfile
           platforms: ${{ matrix.platform }}
           outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
           labels: ${{ steps.meta.outputs.labels }}
@@ -106,8 +102,8 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=${{ inputs.image_tag }}
-            type=sha,prefix=sha-
+            type=raw,value=latest
+            type=ref,event=tag
 
       - name: Download digests
         uses: actions/download-artifact@v6

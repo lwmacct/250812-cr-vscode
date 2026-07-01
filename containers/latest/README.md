@@ -1,10 +1,12 @@
-# single-tag prototype
+# latest container
 
-这个目录是把 `docker/latest-amd64` 和 `docker/latest-arm64` 合并为单个 multi-arch tag 的探索原型，不修改原 `docker/` 目录。
+这个目录维护 `latest` 镜像的单 Dockerfile multi-arch 构建定义。
 
 ## 结论
 
-可行。现有两个镜像的 `app/` 内容完全一致，差异只在架构相关下载或镜像引用：
+原 amd64 和 arm64 分体镜像已合并为一个构建定义。两套旧镜像的 `app/` 内容完全一致，公共运行资源现在放在仓库根目录的 `asset/`。
+
+架构差异只保留在下载名或镜像引用映射上：
 
 - `act`: `x86_64` vs `arm64`
 - Go: `linux-amd64` vs `linux-arm64`
@@ -18,13 +20,13 @@
 ## 构建
 
 ```bash
-containers/single-tag/build.sh ghcr.io/lwmacct/250812-cr-vscode:latest
+containers/latest/build.sh ghcr.io/lwmacct/250812-cr-vscode:latest
 ```
 
 默认构建并推送：
 
 ```bash
-PLATFORMS=linux/amd64,linux/arm64 containers/single-tag/build.sh
+PLATFORMS=linux/amd64,linux/arm64 containers/latest/build.sh
 ```
 
-构建上下文必须是仓库根目录，因为 Dockerfile 复用现有的 `docker/latest-amd64/app/` 作为公共运行资源。
+构建上下文必须是仓库根目录，因为 Dockerfile 会复制根目录下的 `asset/` 到镜像 `/app/`。

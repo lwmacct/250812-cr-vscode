@@ -10,7 +10,7 @@ platforms="${PLATFORMS:-linux/amd64,linux/arm64}"
 docker buildx build \
   --builder "${BUILDER:-default}" \
   --platform "$platforms" \
-  --file containers/single-tag/Dockerfile \
+  --file containers/latest/Dockerfile \
   --tag "$image" \
   --network host \
   --progress plain \
