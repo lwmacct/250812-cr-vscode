@@ -143,6 +143,14 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
 
 RUN set -eux; \
+    echo "安装 ruby-full"; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends ruby-full; \
+    ruby --version; \
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
+
+RUN set -eux; \
     echo "python"; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
