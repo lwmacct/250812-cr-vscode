@@ -11,25 +11,12 @@ SHELL ["/bin/bash", "-lc"]
 RUN <<'RUN_EOF'
 set -eux
 echo "配置构建期 apt 源"
-case "$TARGETARCH" in
-  amd64) _ubuntu_uri="http://azure.archive.ubuntu.com/ubuntu" ;;
-  arm64) _ubuntu_uri="http://azure.ports.ubuntu.com/ubuntu-ports" ;;
-  *) echo "unsupported TARGETARCH=$TARGETARCH" >&2; exit 1 ;;
-esac
-cat >/etc/apt/sources.list.d/ubuntu.sources <<'EOF'
-Types: deb
-URIs: __UBUNTU_URI__
-Suites: resolute resolute-updates resolute-backports
-Components: main universe restricted multiverse
-Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-
-Types: deb
-URIs: __UBUNTU_URI__
-Suites: resolute-security
-Components: main universe restricted multiverse
-Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-EOF
-sed -i "s@__UBUNTU_URI__@${_ubuntu_uri}@g" /etc/apt/sources.list.d/ubuntu.sources
+cp /etc/apt/sources.list.d/ubuntu.sources /etc/apt/ubuntu.sources.origin
+sed -i \
+  -e 's@//.*archive.ubuntu.com@//azure.archive.ubuntu.com@g' \
+  -e 's@//ports.ubuntu.com@//azure.ports.ubuntu.com@g' \
+  -e 's@//security.ubuntu.com@//azure.archive.ubuntu.com@g' \
+  /etc/apt/sources.list.d/ubuntu.sources
 cat /etc/apt/sources.list.d/ubuntu.sources
 apt-get update
 apt-get install -y --no-install-recommends ca-certificates curl wget sudo pcp gnupg
@@ -240,25 +227,14 @@ mkdir -p /root/.ssh
 chmod 700 /root/.ssh
 echo "StrictHostKeyChecking no" >> /root/.ssh/config
 echo "配置运行期 apt 源"
-case "$TARGETARCH" in
-  amd64) _ubuntu_uri="https://mirrors.ustc.edu.cn/ubuntu" ;;
-  arm64) _ubuntu_uri="https://mirrors.ustc.edu.cn/ubuntu-ports" ;;
-  *) echo "unsupported TARGETARCH=$TARGETARCH" >&2; exit 1 ;;
-esac
-cat >/etc/apt/sources.list.d/ubuntu.sources <<'EOF'
-Types: deb
-URIs: __UBUNTU_URI__
-Suites: resolute resolute-updates resolute-backports
-Components: main universe restricted multiverse
-Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-
-Types: deb
-URIs: __UBUNTU_URI__
-Suites: resolute-security
-Components: main universe restricted multiverse
-Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-EOF
-sed -i "s@__UBUNTU_URI__@${_ubuntu_uri}@g" /etc/apt/sources.list.d/ubuntu.sources
+cp /etc/apt/ubuntu.sources.origin /etc/apt/sources.list.d/ubuntu.sources
+sed -i \
+  -e 's@//.*archive.ubuntu.com@//mirrors.ustc.edu.cn@g' \
+  -e 's@//ports.ubuntu.com@//mirrors.ustc.edu.cn@g' \
+  -e 's@//security.ubuntu.com@//mirrors.ustc.edu.cn@g' \
+  -e 's@http:@https:@g' \
+  /etc/apt/sources.list.d/ubuntu.sources
+rm -f /etc/apt/ubuntu.sources.origin
 cat /etc/apt/sources.list.d/ubuntu.sources
 RUN_EOF
 

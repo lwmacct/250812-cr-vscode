@@ -13,7 +13,7 @@
 
 统一 `Dockerfile` 使用 BuildKit 自动注入的 `TARGETARCH` 来映射这些下载名。这个目录现在以 `Dockerfile` 作为唯一事实来源，不再通过模板生成。
 
-构建阶段直接写入 Azure Ubuntu deb822 apt 源，更靠近 hosted runner 网络；镜像末尾会按架构把 apt 源改写为 `mirrors.ustc.edu.cn`，方便交互使用。
+构建阶段基于 Ubuntu 原始 apt 源备份替换到 Azure Ubuntu 镜像源，更靠近 hosted runner 网络；镜像末尾恢复原始备份后把 apt 源改为 `mirrors.ustc.edu.cn`，方便交互使用。
 
 ## 构建
 
