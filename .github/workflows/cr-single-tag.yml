@@ -79,6 +79,10 @@ jobs:
           platforms: ${{ matrix.platform }}
           outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            APT_ARCHIVE_MIRROR=http://azure.archive.ubuntu.com/ubuntu
+            APT_PORTS_MIRROR=http://azure.ports.ubuntu.com/ubuntu-ports
+            APT_SECURITY_MIRROR=http://azure.archive.ubuntu.com/ubuntu
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.cache }}
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.cache }},mode=max
           provenance: false

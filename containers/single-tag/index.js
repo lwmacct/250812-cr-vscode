@@ -11,6 +11,9 @@ const config = {
   license: "MIT",
   timezone: "Asia/Shanghai",
   goProxy: "https://goproxy.cn,direct",
+  aptArchiveMirror: "http://azure.archive.ubuntu.com/ubuntu",
+  aptPortsMirror: "http://azure.ports.ubuntu.com/ubuntu-ports",
+  aptSecurityMirror: "http://azure.archive.ubuntu.com/ubuntu",
 };
 
 const templatePath = path.join(__dirname, "Dockerfile.hbs");

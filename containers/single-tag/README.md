@@ -13,6 +13,12 @@
 
 统一 `Dockerfile.hbs` 使用 BuildKit 自动注入的 `TARGETARCH` 来映射这些下载名，并通过 `index.js` 生成 `Dockerfile`，模式参考 `/data/project/260629-cr-nginx/workspace`。
 
+apt 源通过 Docker build args 配置；GitHub Actions 中显式使用 Azure Ubuntu 镜像源，更靠近 hosted runner 网络：
+
+- `APT_ARCHIVE_MIRROR=http://azure.archive.ubuntu.com/ubuntu`
+- `APT_PORTS_MIRROR=http://azure.ports.ubuntu.com/ubuntu-ports`
+- `APT_SECURITY_MIRROR=http://azure.archive.ubuntu.com/ubuntu`
+
 ## 构建
 
 ```bash
