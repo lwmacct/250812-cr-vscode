@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # https://hub.docker.com/_/ubuntu
-FROM gcr.io/etcd-development/etcd:v3.6.11 AS etcd
+FROM gcr.io/etcd-development/etcd:v3.6.13 AS etcd
 
 FROM ubuntu:resolute-20260421
 LABEL maintainer="https://github.com/lwmacct"
@@ -90,7 +90,23 @@ apt-get clean
 rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN_EOF
 
-# https://github.com/nektos/act
+RUN <<'RUN_EOF'
+set -eux
+echo "安装 1Password CLI https://www.1password.dev/cli/get-started"
+curl -fsSL https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/$(dpkg --print-architecture) stable main" | tee /etc/apt/sources.list.d/1password.list >/dev/null
+install -d -m 0755 /etc/debsig/policies/AC2D62742012EA22
+curl -fsSL https://downloads.1password.com/linux/debian/debsig/1password.pol | tee /etc/debsig/policies/AC2D62742012EA22/1password.pol >/dev/null
+install -d -m 0755 /usr/share/debsig/keyrings/AC2D62742012EA22
+curl -fsSL https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg
+apt-get update
+apt-get install -y --no-install-recommends 1password-cli
+rm -rf /etc/apt/sources.list.d/1password.list
+apt-get clean
+rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+op --version
+RUN_EOF
+
 RUN <<'RUN_EOF'
 set -eux
 echo "安装 act https://github.com/nektos/act"
@@ -126,7 +142,7 @@ RUN_EOF
 
 RUN <<'RUN_EOF'
 set -eux
-echo "安装 fluent-bit"
+echo "安装 fluent-bit https://docs.fluentbit.io/manual/installation/downloads/linux"
 curl https://raw.githubusercontent.com/fluent/fluent-bit/master/install.sh | sh
 apt-get autoremove -y
 apt-get clean

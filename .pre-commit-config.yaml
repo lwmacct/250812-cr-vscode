@@ -13,3 +13,12 @@ repos:
       - id: check-merge-conflict
       - id: check-added-large-files
         args: ["--maxkb=512"]
+
+  - repo: local
+    hooks:
+      - id: docker-buildx-check
+        name: docker buildx check Dockerfiles
+        entry: bash -c 'set -euo pipefail; fd --type f "^Dockerfile$" . -x docker buildx build --check -f {} .'
+        language: system
+        files: (^|/)Dockerfile$
+        pass_filenames: false
