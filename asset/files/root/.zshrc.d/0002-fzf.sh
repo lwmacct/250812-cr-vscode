@@ -1,3 +1,5 @@
+# shellcheck disable=SC2148,SC1090
+
 #### ----------------- 使用说明 -----------------
 #
 # 按键绑定：
@@ -26,7 +28,7 @@
 #### ----------------- 只在 zsh 环境下启用 -----------------
 # 非 zsh 直接返回（如果是被 source 到别的 shell 里时也安全）
 if [ -z "${ZSH_VERSION-}" ]; then
-  return 0 2>/dev/null || exit 0
+  return 0 2>/dev/null
 fi
 
 #### ----------------- fzf 基础配置（可选） -----------------
@@ -65,7 +67,7 @@ __fzf_history_widget() {
     return
   fi
 
-  local _selected=$(fc -ln 1 | grep . | fzf --height 40% --reverse --prompt='' +s --tac)
+  _selected=$(fc -ln 1 | grep . | fzf --height 40% --reverse --prompt='' +s --tac)
   if [[ -n "$_selected" ]]; then
     # fc -ln 已无行号，直接使用（trim 前导空格）
     local _cmd="${_selected#"${_selected%%[![:space:]]*}"}"
