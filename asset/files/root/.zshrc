@@ -1,3 +1,5 @@
+# shellcheck disable=all
+
 __main() {
 
   {

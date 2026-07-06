@@ -269,6 +269,7 @@ ENV GOPROXY=https://goproxy.cn,direct
 ENV GO111MODULE=on
 ENV TASK_REMOTE_DIR=/root/.cache/taskfile
 ENV TASK_X_REMOTE_TASKFILES=1
+ENV PRE_COMMIT_ALLOW_NO_CONFIG=1
 
 WORKDIR /app/data
 COPY asset/ /app/
