@@ -6,6 +6,7 @@
     { "path": "/app/data" },
   ],
   "settings": {
+    "python.languageServer": "None",
     "shfmt.executableArgs": ["-i", "2"],
   },
 }
