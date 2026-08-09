@@ -9,11 +9,14 @@
 架构差异只保留在下载名或镜像引用映射上：
 
 - `act`: `x86_64` vs `arm64`
+- `yq`: `yq_linux_amd64` vs `yq_linux_arm64`
 - Go: `linux-amd64` vs `linux-arm64`
 - `uv`: `x86_64` vs `aarch64`
 - `etcdctl`: 现有 arm64 Dockerfile 使用 `v3.6.11-arm64`，但 `gcr.io/etcd-development/etcd:v3.6.11` 本身已经包含 `linux/amd64` 和 `linux/arm64`
 
 统一 `Dockerfile` 使用 BuildKit 自动注入的 `TARGETARCH` 来映射这些下载名。这个目录现在以 `Dockerfile` 作为唯一事实来源，不再通过模板生成。
+
+`yq` 使用 `mikefarah/yq` 官方发布的 Go 单文件二进制，并在每次构建时通过 `releases/latest` 安装最新版本。
 
 构建阶段基于 Ubuntu 原始 apt 源备份替换到 Azure Ubuntu 镜像源，更靠近 hosted runner 网络；镜像末尾恢复原始备份后把 apt 源改为 `mirrors.ustc.edu.cn`，方便交互使用。
 

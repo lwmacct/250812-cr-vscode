@@ -60,6 +60,19 @@ RUN_EOF
 
 RUN <<'RUN_EOF'
 set -eux
+echo "安装 yq https://github.com/mikefarah/yq"
+case "$TARGETARCH" in
+  amd64|arm64) _arch="$TARGETARCH" ;;
+  *) echo "unsupported TARGETARCH=$TARGETARCH" >&2; exit 1 ;;
+esac
+curl -fsSL "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${_arch}" -o /usr/local/bin/yq
+chmod 0755 /usr/local/bin/yq
+yq --version
+test "$(printf 'service:\n  port: 8080\n' | yq '.service.port')" = "8080"
+RUN_EOF
+
+RUN <<'RUN_EOF'
+set -eux
 echo 'install oh-my-zsh'
 git clone https://github.com/ohmyzsh/ohmyzsh.git /opt/ohmyzsh
 git clone https://github.com/zsh-users/zsh-autosuggestions.git /opt/ohmyzsh/custom/plugins/zsh-autosuggestions
