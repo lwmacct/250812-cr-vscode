@@ -191,10 +191,9 @@ apt-get install -y --no-install-recommends \
   xarclock xvfb x11vnc dbus-x11 \
   protobuf-compiler \
   dnsutils \
-  asciinema \
-  umoci skopeo \
-  ffmpeg \
-  ripgrep fd-find
+  asciinema ffmpeg \
+  ripgrep fd-find \
+  umoci skopeo cpio rpm2cpio
 apt-get clean
 rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN_EOF
