@@ -182,7 +182,7 @@ echo "常用包安装"
 apt-get update
 apt-get install -y --no-install-recommends \
   bpfcc-tools linux-tools-common \
-  build-essential gcc clang make cmake automake ninja-build pkg-config shc upx \
+  build-essential g++ gcc clang make cmake automake ninja-build pkg-config shc upx \
   openjdk-17-jdk \
   libgtk-3-dev libgtk-4-dev libssl-dev librsvg2-dev libayatana-appindicator3-dev libwebkit2gtk-4.1-dev \
   file strace ltrace valgrind netcat-openbsd uuid-runtime \
