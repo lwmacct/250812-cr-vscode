@@ -2,7 +2,7 @@
 # https://hub.docker.com/_/ubuntu
 FROM gcr.io/etcd-development/etcd:v3.7.1 AS etcd
 
-FROM ubuntu:resolute-20260707
+FROM ubuntu:resolute-20260811.1
 LABEL maintainer="https://github.com/lwmacct"
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TARGETARCH
