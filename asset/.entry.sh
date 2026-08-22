@@ -32,16 +32,17 @@ file=/run/supervisord.sock
 chmod=0700
 chown=nobody:nogroup
 
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
 [supervisord]
 user=root
+environment=TERM="xterm"
 nodaemon=true
 pidfile=/var/run/supervisord.pid
 logfile=/var/log/supervisord.log
 logfile_maxbytes=100MB
 logfile_backups=2
-
-[rpcinterface:supervisor]
-supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 
 [supervisorctl]
 serverurl=unix:///run/supervisord.sock
@@ -49,7 +50,7 @@ prompt=mysupervisor
 history_file=~/.sc_history
 
 [include]
-files = /etc/supervisor/conf.d/*.conf /app/data/supervisor.d/*.conf /app/files/app/data/supervisor.d/*.conf
+files = /etc/supervisor/conf.d/*.conf /app/data/supervisor.d/*.conf /app/files/app/data/supervisor.d/*.conf /app/data/workspace/scripts/supervisord.conf
 EOF
 }
 
