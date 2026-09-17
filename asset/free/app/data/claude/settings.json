@@ -15,10 +15,13 @@
     "pr": ""
   },
   "permissions": {
-    "allow": ["WebSearch"],
-    "deny": ["Read(./.env)"],
+    "allow": [
+      "WebSearch"
+    ],
+    "deny": [
+      "Read(./.env)"
+    ],
     "defaultMode": "bypassPermissions"
   },
-  "$docs": "https://code.claude.com/docs/en/settings",
-  "language": "chinese"
+  "$docs": "https://code.claude.com/docs/en/settings"
 }

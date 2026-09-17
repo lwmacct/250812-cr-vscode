@@ -1,12 +1,20 @@
 {
   "folders": [
-    { "path": "/app/data/workspace" },
-    // { "path": "/app/data/claude" },
-    // { "path": "/app/data/codex" },
-    { "path": "/app/data" },
+    {
+      "path": "/app/data/workspace"
+    },
+    {
+      "path": "/app/data/worktrees"
+    },
+    {
+      "path": "/app/data"
+    },
   ],
   "settings": {
     "python.languageServer": "None",
-    "shfmt.executableArgs": ["-i", "2"],
+    "shfmt.executableArgs": [
+      "-i",
+      "2"
+    ],
   },
 }
