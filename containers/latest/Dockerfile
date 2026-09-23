@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:1
 
 # https://github.com/etcd-io/etcd
-FROM gcr.io/etcd-development/etcd:v3.7.1 AS etcd
+FROM gcr.io/etcd-development/etcd:v3.7.2 AS etcd
 
 # https://hub.docker.com/_/ubuntu
-FROM ubuntu:resolute-20260901
+FROM ubuntu:resolute-20260912
 LABEL maintainer="https://github.com/lwmacct"
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TARGETARCH
@@ -120,24 +120,6 @@ rm -rf /etc/apt/sources.list.d/1password.list
 apt-get clean
 rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 op --version
-RUN_EOF
-
-RUN <<'RUN_EOF'
-set -eux
-echo "安装 act https://github.com/nektos/act"
-case "$TARGETARCH" in
-  amd64) _arch="x86_64" ;;
-  arm64) _arch="arm64" ;;
-  *) echo "unsupported TARGETARCH=$TARGETARCH" >&2; exit 1 ;;
-esac
-_tag_name=$(curl -s https://api.github.com/repos/nektos/act/releases/latest | jq -r '.tag_name')
-echo "获取到 act 最新版本: $_tag_name"
-mkdir -p /tmp/act-install
-wget -qO- "https://github.com/nektos/act/releases/download/$_tag_name/act_Linux_${_arch}.tar.gz" | tar -xzf - -C /tmp/act-install
-mv /tmp/act-install/act /usr/local/bin/act
-chmod +x /usr/local/bin/act
-rm -rf /tmp/act-install
-act --version
 RUN_EOF
 
 RUN <<'RUN_EOF'
@@ -261,6 +243,10 @@ ln -sf /usr/bin/fdfind /usr/bin/fd
 echo "配置 SSH 默认行为"
 install -d -m 700 /root/.ssh
 echo "StrictHostKeyChecking no" >> /root/.ssh/config
+
+echo "AI Agent skills"
+mkdir -p /etc/codex/skills
+ln -sfn /app/data/skills /etc/codex/skills
 
 echo "配置运行期 apt 源"
 cp /etc/apt/ubuntu.sources.origin /etc/apt/sources.list.d/ubuntu.sources
