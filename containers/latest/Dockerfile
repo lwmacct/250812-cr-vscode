@@ -272,7 +272,7 @@ ENV PRE_COMMIT_ALLOW_NO_CONFIG=1
 WORKDIR /app/data
 COPY asset/ /app/
 ENTRYPOINT ["tini", "--"]
-CMD ["sh", "-c", "bash /app/.entry.sh"]
+CMD ["bash", "-c", "/app/.entry.sh"]
 
 LABEL org.opencontainers.image.source=https://github.com/lwmacct/250812-cr-vscode
 LABEL org.opencontainers.image.description="专为 VSCode 容器开发环境构建"
