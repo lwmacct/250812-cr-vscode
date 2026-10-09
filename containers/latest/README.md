@@ -4,7 +4,7 @@
 
 ## 结论
 
-原 amd64 和 arm64 分体镜像已合并为一个构建定义。两套旧镜像的 `app/` 内容完全一致，公共运行资源现在放在仓库根目录的 `asset/`。
+原 amd64 和 arm64 分体镜像已合并为一个构建定义。两套旧镜像的 `app/` 内容完全一致，公共运行资源现在放在 `containers/latest/asset/`。
 
 架构差异只保留在下载名或镜像引用映射上：
 
@@ -32,4 +32,4 @@ containers/latest/build.sh ghcr.io/lwmacct/250812-cr-vscode:latest
 PLATFORMS=linux/amd64,linux/arm64 containers/latest/build.sh
 ```
 
-构建上下文必须是仓库根目录，因为 Dockerfile 会复制根目录下的 `asset/` 到镜像 `/app/`。
+构建上下文是 `containers/latest/`，Dockerfile 会把其中的 `asset/` 复制到镜像 `/app/`。

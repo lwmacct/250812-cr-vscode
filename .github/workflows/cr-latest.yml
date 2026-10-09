@@ -57,7 +57,7 @@ jobs:
         id: build
         uses: docker/build-push-action@v7
         with:
-          context: .
+          context: containers/latest
           file: containers/latest/Dockerfile
           platforms: ${{ matrix.platform }}
           outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true

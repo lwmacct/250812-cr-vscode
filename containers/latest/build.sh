@@ -26,7 +26,7 @@ __main() {
     --network host \
     --progress plain \
     --push \
-    .
+    containers/latest
 
 }
 
