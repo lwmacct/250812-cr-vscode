@@ -4,7 +4,7 @@
 FROM gcr.io/etcd-development/etcd:v3.7.2 AS etcd
 
 # https://hub.docker.com/_/ubuntu
-FROM ubuntu:resolute-20260912
+FROM ubuntu:resolute-20260927
 LABEL maintainer="https://github.com/lwmacct"
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TARGETARCH
@@ -58,6 +58,37 @@ rm -rf /*-is-merged
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 echo
+RUN_EOF
+
+RUN <<'RUN_EOF'
+set -eux
+echo "常用包安装: 语言与编译工具链"
+apt-get update
+apt-get install -y --no-install-recommends \
+  openjdk-17-jdk \
+  build-essential g++ gcc clang make cmake automake ninja-build pkg-config shc upx \
+  protobuf-compiler
+apt-get clean
+rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN_EOF
+
+RUN <<'RUN_EOF'
+set -eux
+echo "常用包安装: GUI/媒体/诊断/客户端工具"
+apt-get update
+apt-get install -y --no-install-recommends \
+  bpfcc-tools linux-tools-common \
+  libgtk-3-dev libgtk-4-dev libssl-dev librsvg2-dev libayatana-appindicator3-dev libwebkit2gtk-4.1-dev \
+  file strace ltrace valgrind netcat-openbsd uuid-runtime \
+  git-lfs cron direnv shellcheck fzf zfsutils-linux xxd shfmt bats \
+  zsh redis-tools postgresql-client pgloader openssh-client kcat librdkafka1 sqlite3 \
+  xarclock xvfb x11vnc dbus-x11 \
+  dnsutils \
+  asciinema ffmpeg \
+  ripgrep fd-find \
+  umoci skopeo cpio rpm2cpio
+apt-get clean
+rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN_EOF
 
 RUN <<'RUN_EOF'
@@ -158,28 +189,6 @@ esac
 _go_version=$(curl -sSL 'https://go.dev/dl/?mode=json' | jq -r '.[0].version')
 echo "获取到 Golang 最新版本: $_go_version"
 curl -Lo - "https://go.dev/dl/$_go_version.linux-${_arch}.tar.gz" | tar zxf - -C /usr/local/
-RUN_EOF
-
-RUN <<'RUN_EOF'
-set -eux
-echo "常用包安装"
-apt-get update
-apt-get install -y --no-install-recommends \
-  bpfcc-tools linux-tools-common \
-  build-essential g++ gcc clang make cmake automake ninja-build pkg-config shc upx \
-  openjdk-17-jdk \
-  libgtk-3-dev libgtk-4-dev libssl-dev librsvg2-dev libayatana-appindicator3-dev libwebkit2gtk-4.1-dev \
-  file strace ltrace valgrind netcat-openbsd uuid-runtime \
-  git-lfs cron direnv shellcheck fzf zfsutils-linux xxd shfmt bats \
-  zsh redis-tools postgresql-client pgloader openssh-client kcat librdkafka1 sqlite3 \
-  xarclock xvfb x11vnc dbus-x11 \
-  protobuf-compiler \
-  dnsutils \
-  asciinema ffmpeg \
-  ripgrep fd-find \
-  umoci skopeo cpio rpm2cpio
-apt-get clean
-rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN_EOF
 
 RUN <<'RUN_EOF'
