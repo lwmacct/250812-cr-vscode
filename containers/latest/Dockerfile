@@ -254,6 +254,7 @@ install -d -m 700 /root/.ssh
 echo "StrictHostKeyChecking no" >> /root/.ssh/config
 
 echo "AI Agent skills"
+mkdir -p /etc/codex/
 ln -sfn /app/data/skills /etc/codex/skills || true
 
 echo "配置运行期 apt 源"
