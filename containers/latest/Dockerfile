@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:1
 
 # https://github.com/etcd-io/etcd
-FROM gcr.io/etcd-development/etcd:v3.7.2 AS etcd
+FROM gcr.io/etcd-development/etcd:v3.7.3 AS etcd
 
 # https://hub.docker.com/_/ubuntu
-FROM ubuntu:resolute-20260927
+FROM ubuntu:resolute-20261024.1
 LABEL maintainer="https://github.com/lwmacct"
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TARGETARCH
